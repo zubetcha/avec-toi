@@ -3036,6 +3036,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lucide-react@npm:^0.509.0":
+  version: 0.509.0
+  resolution: "lucide-react@npm:0.509.0"
+  peerDependencies:
+    react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 45e5eabf2f280994badf76bbfc815937c2cbea9b03cdea4a8642462f8052d9060d5d8f7a9c3153e58871d9ffa1094922a4b1c7ab17bad46bd0decb79165140ed
+  languageName: node
+  linkType: hard
+
 "math-intrinsics@npm:^1.1.0":
   version: 1.1.0
   resolution: "math-intrinsics@npm:1.1.0"
@@ -3241,6 +3250,7 @@ __metadata:
     autoprefixer: ^10.4.21
     eslint: ^9
     eslint-config-next: 15.3.1
+    lucide-react: ^0.509.0
     next: 15.3.1
     postcss: ^8.5.3
     prettier: ^3.5.3

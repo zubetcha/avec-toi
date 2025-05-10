@@ -36,7 +36,10 @@ const bannerImages = [
 
 export default function Banner() {
   return (
-    <div className="relative h-[400px] w-full overflow-hidden bg-slate-50 md:h-[500px]">
+    <div
+      className="relative w-full overflow-hidden bg-slate-50"
+      style={{ height: "calc(100vh - 64px)" }}
+    >
       <Swiper
         modules={[Autoplay, Pagination, Navigation]}
         spaceBetween={0}
@@ -55,11 +58,12 @@ export default function Banner() {
         {bannerImages.map((image) => (
           <SwiperSlide key={image.id}>
             <div
-              className="absolute inset-0 flex flex-col items-center justify-center"
+              className="relative flex h-full w-full flex-col items-center justify-center"
               style={{
                 backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${image.src})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
+                minHeight: "100%",
               }}
             >
               <div className="mx-4 max-w-lg rounded-lg bg-slate-50 p-8 text-center md:p-12">
