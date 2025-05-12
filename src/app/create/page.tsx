@@ -68,15 +68,47 @@ interface VideoInfo {
 // 전체 폼 데이터 타입 정의
 interface FormData {
   title: string;
-  date: string;
-  time: string;
-  groomName: string;
-  brideName: string;
-  venueName: string;
-  venueAddress: string;
+  // 신랑측 정보
+  groomInfo: {
+    lastName: string;
+    firstName: string;
+    isChild: "son" | "daughter";
+    fatherName: string;
+    isFatherDeceased: boolean;
+    motherName: string;
+    isMotherDeceased: boolean;
+  };
+  // 신부측 정보
+  brideInfo: {
+    lastName: string;
+    firstName: string;
+    isChild: "son" | "daughter";
+    fatherName: string;
+    isFatherDeceased: boolean;
+    motherName: string;
+    isMotherDeceased: boolean;
+  };
+  // 추가 옵션
+  options: {
+    showDeceasedWithFlower: boolean;
+    showBrideFirst: boolean;
+  };
+  selectedTemplate: number;
+  weddingDate: string;
+  weddingTime: string;
+  weddingLocation: string;
+  weddingAddress: string;
+  theme: {
+    selectedColor: string;
+    selectedFont: string;
+    selectedFontSize: string;
+    useHighContrast: boolean;
+    useAnimation: boolean;
+    useParallaxEffect: boolean;
+    useAutoScroll: boolean;
+  };
   message: string;
   endingMessage: string;
-  templateId: number;
   mainImage: string;
   galleryImages: GalleryImage[];
   transportations: TransportInfo[];
@@ -95,20 +127,55 @@ interface FormData {
   kakaoShareDescription: string;
   kakaoShareThumbnail: string;
   customUrl: string;
+  backgroundColor: string;
+  backgroundPattern: string;
+  backgroundEffect: string;
 }
 
 export default function CreatePage() {
   const [formData, setFormData] = useState<FormData>({
     title: "",
-    date: "",
-    time: "12:00",
-    groomName: "",
-    brideName: "",
-    venueName: "",
-    venueAddress: "",
+    // 신랑측 정보 초기화
+    groomInfo: {
+      lastName: "",
+      firstName: "",
+      isChild: "son",
+      fatherName: "",
+      isFatherDeceased: false,
+      motherName: "",
+      isMotherDeceased: false,
+    },
+    // 신부측 정보 초기화
+    brideInfo: {
+      lastName: "",
+      firstName: "",
+      isChild: "daughter",
+      fatherName: "",
+      isFatherDeceased: false,
+      motherName: "",
+      isMotherDeceased: false,
+    },
+    // 옵션 초기화
+    options: {
+      showDeceasedWithFlower: false,
+      showBrideFirst: false,
+    },
+    selectedTemplate: 1,
+    weddingDate: "",
+    weddingTime: "",
+    weddingLocation: "",
+    weddingAddress: "",
+    theme: {
+      selectedColor: "rose",
+      selectedFont: "pretendard",
+      selectedFontSize: "medium",
+      useHighContrast: false,
+      useAnimation: true,
+      useParallaxEffect: false,
+      useAutoScroll: false,
+    },
     message: "",
     endingMessage: "",
-    templateId: 1,
     mainImage: "",
     galleryImages: [],
     transportations: [],
@@ -127,46 +194,91 @@ export default function CreatePage() {
     kakaoShareDescription: "소중한 분들을 초대합니다. 함께해 주신다면 더없는 기쁨이겠습니다.",
     kakaoShareThumbnail: "",
     customUrl: "",
+    backgroundColor: "#ffffff",
+    backgroundPattern: "none",
+    backgroundEffect: "none",
   });
 
   const handleInfoChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleGroomInfoChange = (field: string, value: any) => {
+    setFormData((prev) => ({
+      ...prev,
+      groomInfo: {
+        ...prev.groomInfo,
+        [field]: value,
+      },
+    }));
+  };
+
+  const handleBrideInfoChange = (field: string, value: any) => {
+    setFormData((prev) => ({
+      ...prev,
+      brideInfo: {
+        ...prev.brideInfo,
+        [field]: value,
+      },
+    }));
+  };
+
+  const handleOptionsChange = (field: string, value: boolean) => {
+    setFormData((prev) => ({
+      ...prev,
+      options: {
+        ...prev.options,
+        [field]: value,
+      },
+    }));
+  };
+
   const handleTemplateSelect = (id: number) => {
-    setFormData((prev) => ({ ...prev, templateId: id }));
+    setFormData((prev) => ({ ...prev, selectedTemplate: id }));
   };
 
   return (
     <div className="flex min-h-screen flex-col items-center gap-6 font-[family-name:var(--font-geist-sans)]">
-      {/* 헤더 영역 - 상단에 고정 */}
-      <div className="sticky top-0 z-10 flex w-full items-center justify-between bg-white p-8 shadow-sm">
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between">
-          <h1 className="text-2xl font-bold">청첩장 만들기</h1>
-          <div className="flex gap-4">
-            <Link href="/mypage" className="text-sm text-gray-600 hover:text-black">
-              내 청첩장
-            </Link>
-            <Link href="/" className="text-sm text-gray-600 hover:text-black">
-              홈으로
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex w-full max-w-7xl justify-between gap-8 p-8">
+      <div className="flex w-full max-w-6xl justify-between gap-8 p-8">
         {/* 왼쪽 커스터마이징 영역 */}
         <div className="w-full space-y-6 overflow-y-auto">
           <ThemeCard
+            currentThemeId={formData.selectedTemplate}
             onThemeChange={(id) => handleTemplateSelect(id)}
-            currentThemeId={formData.templateId}
+            backgroundColor={formData.backgroundColor}
+            backgroundPattern={formData.backgroundPattern}
+            backgroundEffect={formData.backgroundEffect}
+            selectedFont={formData.theme.selectedFont}
+            selectedFontSize={formData.theme.selectedFontSize}
+            options={formData.theme}
+            onBackgroundColorChange={(color) =>
+              setFormData((prev) => ({ ...prev, backgroundColor: color }))
+            }
+            onBackgroundPatternChange={(pattern) =>
+              setFormData((prev) => ({ ...prev, backgroundPattern: pattern }))
+            }
+            onBackgroundEffectChange={(effect) =>
+              setFormData((prev) => ({ ...prev, backgroundEffect: effect }))
+            }
+            onFontChange={(font) =>
+              setFormData((prev) => ({ ...prev, theme: { ...prev.theme, selectedFont: font } }))
+            }
+            onFontSizeChange={(fontSize: string) =>
+              setFormData((prev) => ({
+                ...prev,
+                theme: { ...prev.theme, selectedFontSize: fontSize },
+              }))
+            }
           />
 
           <BasicInfoCard
-            title={formData.title}
-            groomName={formData.groomName}
-            brideName={formData.brideName}
+            groomInfo={formData.groomInfo}
+            brideInfo={formData.brideInfo}
+            options={formData.options}
             onInfoChange={handleInfoChange}
+            onGroomInfoChange={handleGroomInfoChange}
+            onBrideInfoChange={handleBrideInfoChange}
+            onOptionsChange={handleOptionsChange}
           />
 
           <MainScreenCard
@@ -177,19 +289,27 @@ export default function CreatePage() {
           <GreetingCard
             message={formData.message}
             onMessageChange={(message) => handleInfoChange("message", message)}
+            title={formData.title}
+            onTitleChange={(title) => handleInfoChange("title", title)}
           />
 
           <WeddingDateCard
-            date={formData.date}
-            time={formData.time}
-            onDateChange={(date) => handleInfoChange("date", date)}
-            onTimeChange={(time) => handleInfoChange("time", time)}
+            date={formData.weddingDate}
+            time={formData.weddingTime}
+            onDateChange={(date) => handleInfoChange("weddingDate", date)}
+            onTimeChange={(time) => handleInfoChange("weddingTime", time)}
           />
 
           <WeddingVenueCard
-            venueName={formData.venueName}
-            venueAddress={formData.venueAddress}
-            onVenueChange={handleInfoChange}
+            venueName={formData.weddingLocation}
+            venueAddress={formData.weddingAddress}
+            onVenueChange={(field, value) => {
+              if (field === "venueName") {
+                handleInfoChange("weddingLocation", value);
+              } else if (field === "venueAddress") {
+                handleInfoChange("weddingAddress", value);
+              }
+            }}
           />
 
           <TransportationCard
@@ -279,12 +399,12 @@ export default function CreatePage() {
         <div className="sticky top-32 h-[calc(100vh-12rem)] w-160">
           <InvitationPreview
             title={formData.title || undefined}
-            date={formData.date || undefined}
-            groomName={formData.groomName || undefined}
-            brideName={formData.brideName || undefined}
-            location={formData.venueName || undefined}
+            date={formData.weddingDate || undefined}
+            groomName={formData.groomInfo.firstName || undefined}
+            brideName={formData.brideInfo.firstName || undefined}
+            location={formData.weddingLocation || undefined}
             message={formData.message || undefined}
-            templateId={formData.templateId}
+            templateId={formData.selectedTemplate}
           />
         </div>
       </div>

@@ -1,13 +1,33 @@
 "use client";
 
 import CustomizationCard from "./CustomizationCard";
+import { Input, Button } from "antd";
+
+// Input 컴포넌트 스타일 커스터마이징
+const inputStyles = {
+  width: "100%",
+  height: "38px",
+};
+
+// TextArea 컴포넌트 스타일 커스터마이징
+const textAreaStyles = {
+  width: "100%",
+  height: "128px",
+};
 
 interface GreetingCardProps {
   message: string;
   onMessageChange: (message: string) => void;
+  title: string;
+  onTitleChange: (title: string) => void;
 }
 
-export default function GreetingCard({ message, onMessageChange }: GreetingCardProps) {
+export default function GreetingCard({
+  message,
+  onMessageChange,
+  title,
+  onTitleChange,
+}: GreetingCardProps) {
   const presetMessages = [
     "서로 다른 두 사람이 만나 하나의 사랑으로 새 출발합니다.\n소중한 분들을 초대하여 뜻깊은 자리를 빛내주시면 감사하겠습니다.",
     "평생을 같이하고 싶은 사람을 만났습니다.\n서로 아껴주고 이해하며 사랑을 베풀며 살고 싶습니다.\n저희의 새로운 출발을 축복해 주세요.",
@@ -22,6 +42,22 @@ export default function GreetingCard({ message, onMessageChange }: GreetingCardP
   return (
     <CustomizationCard title="인사말">
       <div className="space-y-4">
+        <div>
+          <label
+            htmlFor="invitation-title"
+            className="mb-1 block text-sm font-medium text-gray-700"
+          >
+            청첩장 제목
+          </label>
+          <Input
+            id="invitation-title"
+            value={title}
+            onChange={(e) => onTitleChange(e.target.value)}
+            style={inputStyles}
+            placeholder="청첩장 제목을 입력하세요"
+          />
+        </div>
+
         <p className="text-sm text-gray-600">청첩장에 표시할 인사말을 작성하세요.</p>
 
         <div>
@@ -31,11 +67,11 @@ export default function GreetingCard({ message, onMessageChange }: GreetingCardP
           >
             인사말 메시지
           </label>
-          <textarea
+          <Input.TextArea
             id="greeting-message"
             value={message}
             onChange={(e) => onMessageChange(e.target.value)}
-            className="h-32 w-full rounded-md border border-gray-300 p-2 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none"
+            style={textAreaStyles}
             placeholder="인사말을 입력하세요"
           />
         </div>
