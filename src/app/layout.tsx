@@ -1,21 +1,14 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import Header from "@/components/Header";
+import { Inter } from "next/font/google";
 import "./globals.css";
+import Header from "@/components/Header";
+import Script from "next/script";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "모바일 청첩장",
-  description: "쉽고 빠르게 나만의 모바일 청첩장을 만들어보세요",
+  description: "모바일 청첩장 웹사이트",
 };
 
 export default function RootLayout({
@@ -25,7 +18,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={`${geistSans.variable} ${geistMono.variable} bg-slate-50 antialiased`}>
+      <head>
+        <Script
+          type="text/javascript"
+          src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY}&libraries=services&autoload=false`}
+          strategy="beforeInteractive"
+        />
+      </head>
+      <body className={`${inter.className} bg-slate-50`}>
         <Header />
         <main className="bg-slate-50 pt-16">{children}</main>
       </body>

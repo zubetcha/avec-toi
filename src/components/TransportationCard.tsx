@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 import CustomizationCard from "./CustomizationCard";
+import { Input, Checkbox, Button, message } from "antd";
+import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
+
+const { TextArea } = Input;
 
 interface TransportInfo {
   type: string;
@@ -53,6 +57,30 @@ export default function TransportationCard({
     onTransportChange(updatedTransports);
   };
 
+  const handleTransportDelete = (index: number) => {
+    // 기본 교통수단(처음 4개)은 삭제할 수 없도록 처리
+    if (index < 4) {
+      return;
+    }
+
+    const updatedTransports = transports.filter((_, i) => i !== index);
+    setTransports(updatedTransports);
+    onTransportChange(updatedTransports);
+    message.success("교통 수단이 삭제되었습니다.");
+  };
+
+  const handleTransportTypeChange = (index: number, value: string) => {
+    const updatedTransports = transports.map((transport, i) => {
+      if (i === index) {
+        return { ...transport, type: value };
+      }
+      return transport;
+    });
+
+    setTransports(updatedTransports);
+    onTransportChange(updatedTransports);
+  };
+
   return (
     <CustomizationCard title="교통 수단">
       <div className="space-y-4">
@@ -64,26 +92,44 @@ export default function TransportationCard({
           <div key={index} className="rounded-lg border border-gray-200 bg-white p-3">
             <div className="mb-2 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
+                <Checkbox
                   id={`transport-${index}`}
                   checked={transport.enabled}
                   onChange={() => handleTransportToggle(index)}
-                  className="h-4 w-4 rounded border-gray-300 text-rose-500 focus:ring-rose-500"
-                />
-                <label htmlFor={`transport-${index}`} className="text-sm font-medium text-gray-700">
-                  {transport.type}
-                </label>
+                >
+                  {index < 4 ? (
+                    <span className="text-sm font-medium text-gray-700">{transport.type}</span>
+                  ) : (
+                    <Input
+                      size="small"
+                      value={transport.type}
+                      onChange={(e) => handleTransportTypeChange(index, e.target.value)}
+                      placeholder="교통 수단 이름"
+                      className="w-32"
+                    />
+                  )}
+                </Checkbox>
               </div>
+              {index >= 4 && (
+                <div>
+                  <Button
+                    type="text"
+                    size="small"
+                    icon={<DeleteOutlined />}
+                    danger
+                    onClick={() => handleTransportDelete(index)}
+                  />
+                </div>
+              )}
             </div>
 
             {transport.enabled && (
               <div className="mt-2">
-                <textarea
+                <TextArea
                   value={transport.description}
                   onChange={(e) => handleDescriptionChange(index, e.target.value)}
                   placeholder={`${transport.type} 안내 정보를 입력하세요`}
-                  className="h-20 w-full rounded-md border border-gray-300 p-2 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none"
+                  autoSize={{ minRows: 3, maxRows: 6 }}
                 />
               </div>
             )}
@@ -91,17 +137,18 @@ export default function TransportationCard({
         ))}
 
         {/* 교통 수단 추가 버튼 */}
-        <button
-          type="button"
+        <Button
+          type="dashed"
+          block
+          icon={<PlusOutlined />}
           onClick={() => {
             const newTransports = [...transports, { type: "기타", description: "", enabled: true }];
             setTransports(newTransports);
             onTransportChange(newTransports);
           }}
-          className="w-full rounded-md border border-dashed border-gray-300 bg-gray-50 p-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
         >
-          + 교통 수단 추가
-        </button>
+          교통 수단 추가
+        </Button>
       </div>
     </CustomizationCard>
   );

@@ -2,6 +2,11 @@
 
 import { useState } from "react";
 import CustomizationCard from "./CustomizationCard";
+import { Input, Select, Switch, Button, Card, Space, Typography, Row, Col } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
+
+const { Text, Paragraph } = Typography;
+const { Option } = Select;
 
 interface BankAccount {
   id: string;
@@ -87,149 +92,108 @@ export default function BankAccountCard({ accounts = [], onAccountsChange }: Ban
 
   return (
     <CustomizationCard title="보내는 곳">
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-gray-600">축하의 마음을 전할 계좌 정보를 입력하세요.</p>
+      <Space direction="vertical" size="middle" className="w-full">
+        <Row justify="space-between" align="middle">
+          <Text type="secondary">축하의 마음을 전할 계좌 정보를 입력하세요.</Text>
 
-          <div className="flex items-center">
-            <label htmlFor="show-accounts" className="mr-2 text-xs text-gray-700">
+          <Space align="center">
+            <Text type="secondary" className="text-xs">
               계좌번호 표시
-            </label>
-            <div className="relative inline-block h-5 w-9">
-              <input
-                type="checkbox"
-                id="show-accounts"
-                checked={showAccounts}
-                onChange={() => setShowAccounts(!showAccounts)}
-                className="peer absolute h-0 w-0 opacity-0"
-              />
-              <span className="absolute inset-0 cursor-pointer rounded-full bg-gray-300 transition duration-300 peer-checked:bg-rose-500"></span>
-              <span className="absolute top-0.5 left-0.5 h-4 w-4 transform rounded-full bg-white transition duration-300 peer-checked:translate-x-4"></span>
-            </div>
-          </div>
-        </div>
+            </Text>
+            <Switch
+              size="small"
+              checked={showAccounts}
+              onChange={setShowAccounts}
+              className="bg-gray-300"
+              checkedChildren=""
+              unCheckedChildren=""
+            />
+          </Space>
+        </Row>
 
-        <div className="space-y-3">
+        <Space direction="vertical" size="small" className="w-full">
           {bankAccounts.map((account) => (
-            <div key={account.id} className="rounded-lg border border-gray-200 bg-white p-3">
-              <div className="mb-3 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-gray-700">
-                    {account.relationship || "계좌 정보"}
-                  </span>
-                </div>
-                <button
-                  onClick={() => handleRemoveAccount(account.id)}
-                  className="rounded p-1 text-gray-500 hover:bg-gray-100"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                      clipRule="evenodd"
+            <Card
+              key={account.id}
+              size="small"
+              className="rounded-lg border border-gray-200"
+              bodyStyle={{ padding: 12 }}
+            >
+              <Space direction="vertical" size="small" className="w-full">
+                <Row justify="space-between" align="middle">
+                  <Text strong>{account.relationship || "계좌 정보"}</Text>
+                  <Button
+                    type="text"
+                    icon={<DeleteOutlined />}
+                    size="small"
+                    onClick={() => handleRemoveAccount(account.id)}
+                    className="text-gray-500"
+                  />
+                </Row>
+
+                <Space direction="vertical" size="small" className="w-full">
+                  <div>
+                    <Text className="mb-1 block text-xs">관계</Text>
+                    <Input
+                      size="small"
+                      value={account.relationship}
+                      onChange={(e) =>
+                        handleAccountChange(account.id, "relationship", e.target.value)
+                      }
+                      placeholder="예: 신랑측, 신부측, 신랑 어머니"
                     />
-                  </svg>
-                </button>
-              </div>
+                  </div>
 
-              <div className="space-y-2">
-                <div>
-                  <label
-                    htmlFor={`relationship-${account.id}`}
-                    className="mb-1 block text-xs font-medium text-gray-700"
-                  >
-                    관계
-                  </label>
-                  <input
-                    type="text"
-                    id={`relationship-${account.id}`}
-                    value={account.relationship}
-                    onChange={(e) =>
-                      handleAccountChange(account.id, "relationship", e.target.value)
-                    }
-                    placeholder="예: 신랑측, 신부측, 신랑 어머니"
-                    className="w-full rounded-md border border-gray-300 p-1.5 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none"
-                  />
-                </div>
+                  <div>
+                    <Text className="mb-1 block text-xs">은행</Text>
+                    <Select
+                      size="small"
+                      value={account.bankName || undefined}
+                      onChange={(value) => handleAccountChange(account.id, "bankName", value)}
+                      placeholder="은행 선택"
+                      className="w-full"
+                    >
+                      {banks.map((bank) => (
+                        <Option key={bank} value={bank}>
+                          {bank}
+                        </Option>
+                      ))}
+                    </Select>
+                  </div>
 
-                <div>
-                  <label
-                    htmlFor={`bank-${account.id}`}
-                    className="mb-1 block text-xs font-medium text-gray-700"
-                  >
-                    은행
-                  </label>
-                  <select
-                    id={`bank-${account.id}`}
-                    value={account.bankName}
-                    onChange={(e) => handleAccountChange(account.id, "bankName", e.target.value)}
-                    className="w-full rounded-md border border-gray-300 p-1.5 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none"
-                  >
-                    <option value="">은행 선택</option>
-                    {banks.map((bank) => (
-                      <option key={bank} value={bank}>
-                        {bank}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                  <div>
+                    <Text className="mb-1 block text-xs">계좌번호</Text>
+                    <Input
+                      size="small"
+                      value={account.accountNumber}
+                      onChange={(e) =>
+                        handleAccountChange(account.id, "accountNumber", e.target.value)
+                      }
+                      placeholder="- 없이 입력하세요"
+                    />
+                  </div>
 
-                <div>
-                  <label
-                    htmlFor={`account-number-${account.id}`}
-                    className="mb-1 block text-xs font-medium text-gray-700"
-                  >
-                    계좌번호
-                  </label>
-                  <input
-                    type="text"
-                    id={`account-number-${account.id}`}
-                    value={account.accountNumber}
-                    onChange={(e) =>
-                      handleAccountChange(account.id, "accountNumber", e.target.value)
-                    }
-                    placeholder="- 없이 입력하세요"
-                    className="w-full rounded-md border border-gray-300 p-1.5 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor={`account-holder-${account.id}`}
-                    className="mb-1 block text-xs font-medium text-gray-700"
-                  >
-                    예금주
-                  </label>
-                  <input
-                    type="text"
-                    id={`account-holder-${account.id}`}
-                    value={account.accountHolder}
-                    onChange={(e) =>
-                      handleAccountChange(account.id, "accountHolder", e.target.value)
-                    }
-                    placeholder="예금주 이름을 입력하세요"
-                    className="w-full rounded-md border border-gray-300 p-1.5 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none"
-                  />
-                </div>
-              </div>
-            </div>
+                  <div>
+                    <Text className="mb-1 block text-xs">예금주</Text>
+                    <Input
+                      size="small"
+                      value={account.accountHolder}
+                      onChange={(e) =>
+                        handleAccountChange(account.id, "accountHolder", e.target.value)
+                      }
+                      placeholder="예금주 이름을 입력하세요"
+                    />
+                  </div>
+                </Space>
+              </Space>
+            </Card>
           ))}
-        </div>
+        </Space>
 
-        {/* 계좌 추가 버튼 */}
-        <button
-          type="button"
-          onClick={handleAddAccount}
-          className="w-full rounded-md border border-dashed border-gray-300 bg-gray-50 p-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
-        >
+        <Button type="dashed" onClick={handleAddAccount} className="w-full" block>
           + 계좌 추가
-        </button>
-      </div>
+        </Button>
+      </Space>
     </CustomizationCard>
   );
 }

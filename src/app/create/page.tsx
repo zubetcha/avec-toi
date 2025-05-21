@@ -38,7 +38,6 @@ interface GalleryImage {
 interface ContactInfo {
   id: string;
   name: string;
-  relationship: string;
   phoneNumber: string;
   showCall: boolean;
   showSms: boolean;
@@ -112,7 +111,14 @@ interface FormData {
   mainImage: string;
   galleryImages: GalleryImage[];
   transportations: TransportInfo[];
-  contacts: ContactInfo[];
+  contacts: {
+    groom: ContactInfo;
+    groomFather: ContactInfo;
+    groomMother: ContactInfo;
+    bride: ContactInfo;
+    brideFather: ContactInfo;
+    brideMother: ContactInfo;
+  };
   bankAccounts: BankAccount[];
   selectedSong: Song | null;
   autoPlay: boolean;
@@ -131,6 +137,51 @@ interface FormData {
   backgroundPattern: string;
   backgroundEffect: string;
 }
+
+const defaultContacts = {
+  groom: {
+    id: "groom",
+    name: "",
+    phoneNumber: "",
+    showCall: true,
+    showSms: true,
+  },
+  groomFather: {
+    id: "groomFather",
+    name: "",
+    phoneNumber: "",
+    showCall: true,
+    showSms: true,
+  },
+  groomMother: {
+    id: "groomMother",
+    name: "",
+    phoneNumber: "",
+    showCall: true,
+    showSms: true,
+  },
+  bride: {
+    id: "bride",
+    name: "",
+    phoneNumber: "",
+    showCall: true,
+    showSms: true,
+  },
+  brideFather: {
+    id: "brideFather",
+    name: "",
+    phoneNumber: "",
+    showCall: true,
+    showSms: true,
+  },
+  brideMother: {
+    id: "brideMother",
+    name: "",
+    phoneNumber: "",
+    showCall: true,
+    showSms: true,
+  },
+};
 
 export default function CreatePage() {
   const [formData, setFormData] = useState<FormData>({
@@ -179,7 +230,7 @@ export default function CreatePage() {
     mainImage: "",
     galleryImages: [],
     transportations: [],
-    contacts: [],
+    contacts: defaultContacts,
     bankAccounts: [],
     selectedSong: null,
     autoPlay: true,

@@ -1,7 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import CustomizationCard from "./CustomizationCard";
+import { Input, Button, Checkbox, Space, Row, Col } from "antd";
+import { SearchOutlined, PhoneOutlined } from "@ant-design/icons";
+
+declare global {
+  interface Window {
+    kakao: any;
+  }
+}
 
 interface WeddingVenueCardProps {
   venueName: string;
@@ -15,6 +23,113 @@ export default function WeddingVenueCard({
   onVenueChange,
 }: WeddingVenueCardProps) {
   const [showMapPreview, setShowMapPreview] = useState(false);
+  const mapRef = useRef<HTMLDivElement>(null);
+  const [map, setMap] = useState<any>(null);
+  const [marker, setMarker] = useState<any>(null);
+  const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
+
+  // 새로 추가된 상태들
+  const [venueTitle, setVenueTitle] = useState("웨딩 본식");
+  const [venueHall, setVenueHall] = useState("");
+  const [venuePhone, setVenuePhone] = useState("");
+  const [showMap, setShowMap] = useState(true);
+  const [lockMap, setLockMap] = useState(false);
+  const [attachDirections, setAttachDirections] = useState(false);
+
+  // 카카오맵 초기화
+  useEffect(() => {
+    if (!showMapPreview || !mapRef.current) {
+      return;
+    }
+
+    const loadKakaoMap = () => {
+      if (window.kakao && window.kakao.maps) {
+        window.kakao.maps.load(() => {
+          initializeMap();
+        });
+      }
+    };
+
+    const initializeMap = () => {
+      const options = {
+        center: new window.kakao.maps.LatLng(37.566826, 126.9786567), // 서울 시청 (기본값)
+        level: 3,
+        draggable: !lockMap, // 지도 잠금 옵션 적용
+        zoomable: !lockMap, // 지도 잠금 옵션 적용
+      };
+
+      const kakaoMap = new window.kakao.maps.Map(mapRef.current, options);
+      setMap(kakaoMap);
+
+      // 주소가 있으면 해당 위치로 지도 이동
+      if (venueAddress) {
+        searchAddressToCoordinate(venueAddress, kakaoMap);
+      }
+    };
+
+    loadKakaoMap();
+  }, [showMapPreview, lockMap]);
+
+  // 지도 잠금 상태가 변경될 때 지도 설정 업데이트
+  useEffect(() => {
+    if (map) {
+      map.setDraggable(!lockMap);
+      map.setZoomable(!lockMap);
+    }
+  }, [lockMap, map]);
+
+  // 주소로 좌표 검색 및 마커 표시
+  const searchAddressToCoordinate = (address: string, mapInstance: any = map) => {
+    if (!mapInstance || !window.kakao) return;
+
+    // 주소-좌표 변환 객체 생성
+    const geocoder = new window.kakao.maps.services.Geocoder();
+
+    // 주소로 좌표를 검색
+    geocoder.addressSearch(address, (result: any, status: any) => {
+      if (status === window.kakao.maps.services.Status.OK) {
+        const coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
+        setCoordinates({ lat: parseFloat(result[0].y), lng: parseFloat(result[0].x) });
+
+        // 기존 마커 제거
+        if (marker) {
+          marker.setMap(null);
+        }
+
+        // 결과값으로 받은 위치를 마커로 표시
+        const newMarker = new window.kakao.maps.Marker({
+          map: mapInstance,
+          position: coords,
+        });
+        setMarker(newMarker);
+
+        // 인포윈도우로 장소에 대한 설명 표시
+        const infowindow = new window.kakao.maps.InfoWindow({
+          content: `<div style="width:150px;text-align:center;padding:6px 0;">${venueName}${venueHall ? ` ${venueHall}` : ""}</div>`,
+        });
+        infowindow.open(mapInstance, newMarker);
+
+        // 지도의 중심을 결과값으로 받은 위치로 이동
+        mapInstance.setCenter(coords);
+      } else {
+        alert("주소를 찾을 수 없습니다. 다시 확인해주세요.");
+      }
+    });
+  };
+
+  // 주소 검색 버튼 클릭 시 실행
+  const searchAddress = () => {
+    if (venueAddress) {
+      searchAddressToCoordinate(venueAddress);
+    }
+  };
+
+  // 주소 변경 시 지도 업데이트
+  useEffect(() => {
+    if (showMapPreview && map && venueAddress) {
+      searchAddressToCoordinate(venueAddress);
+    }
+  }, [venueAddress, venueName, venueHall, showMapPreview, map]);
 
   return (
     <CustomizationCard title="예식 장소">
@@ -22,78 +137,121 @@ export default function WeddingVenueCard({
         <p className="text-sm text-gray-600">예식이 진행될 장소 정보를 입력하세요.</p>
 
         <div>
-          <label htmlFor="venue-name" className="mb-1 block text-sm font-medium text-gray-700">
-            예식장 이름
-          </label>
-          <input
-            type="text"
-            id="venue-name"
+          <label className="mb-1 block text-sm font-medium text-gray-700">제목</label>
+          <Input
+            value={venueTitle}
+            onChange={(e) => setVenueTitle(e.target.value)}
+            placeholder="예식 장소 제목을 입력하세요 (예: 웨딩 본식)"
+          />
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium text-gray-700">예식장 이름</label>
+          <Input
             value={venueName}
             onChange={(e) => onVenueChange("venueName", e.target.value)}
-            className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none"
             placeholder="예식장 이름을 입력하세요"
           />
         </div>
 
         <div>
-          <label htmlFor="venue-address" className="mb-1 block text-sm font-medium text-gray-700">
-            예식장 주소
-          </label>
-          <input
-            type="text"
-            id="venue-address"
-            value={venueAddress}
-            onChange={(e) => onVenueChange("venueAddress", e.target.value)}
-            className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none"
-            placeholder="예식장 주소를 입력하세요"
+          <label className="mb-1 block text-sm font-medium text-gray-700">예식장 주소</label>
+          <div className="flex gap-2">
+            <Input
+              value={venueAddress}
+              onChange={(e) => onVenueChange("venueAddress", e.target.value)}
+              placeholder="예식장 주소를 입력하세요"
+            />
+            {showMapPreview && (
+              <Button icon={<SearchOutlined />} onClick={searchAddress} type="primary">
+                검색
+              </Button>
+            )}
+          </div>
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium text-gray-700">예식장 층/홀</label>
+          <Input
+            value={venueHall}
+            onChange={(e) => setVenueHall(e.target.value)}
+            placeholder="예식장 층/홀을 입력하세요 (예: 3층 그랜드홀)"
           />
         </div>
 
-        {/* 지도 검색 버튼 */}
         <div>
-          <button
-            type="button"
-            onClick={() => setShowMapPreview(!showMapPreview)}
-            className="w-full rounded-md bg-gray-100 p-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
-          >
-            {showMapPreview ? "지도 미리보기 닫기" : "지도에서 위치 확인"}
-          </button>
+          <label className="mb-1 block text-sm font-medium text-gray-700">예식장 연락처</label>
+          <Input
+            value={venuePhone}
+            onChange={(e) => setVenuePhone(e.target.value)}
+            placeholder="예식장 연락처를 입력하세요"
+            prefix={<PhoneOutlined />}
+          />
         </div>
 
-        {/* 지도 미리보기 (실제 구현에서는 지도 API 연동 필요) */}
-        {showMapPreview && venueAddress && (
-          <div className="overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
-            <div className="h-48 w-full bg-gray-200 p-4 text-center text-sm text-gray-600">
-              <p>지도 미리보기 영역</p>
-              <p className="mt-2 font-medium">{venueName}</p>
-              <p>{venueAddress}</p>
-              <p className="mt-4 text-xs text-gray-500">
-                (실제 구현 시 카카오맵 또는 네이버맵 API 연동 필요)
-              </p>
-            </div>
+        {/* 옵션 설정 */}
+        <div className="mt-4">
+          <p className="mb-2 text-sm font-medium text-gray-700">옵션 설정</p>
+          <Row gutter={[16, 16]}>
+            <Col span={24}>
+              <Checkbox checked={showMap} onChange={(e) => setShowMap(e.target.checked)}>
+                지도 표시하기
+              </Checkbox>
+            </Col>
+            <Col span={24}>
+              <Checkbox
+                checked={lockMap}
+                onChange={(e) => setLockMap(e.target.checked)}
+                disabled={!showMap}
+              >
+                지도 잠금 (스크롤 및 이동 비활성화)
+              </Checkbox>
+            </Col>
+            <Col span={24}>
+              <Checkbox
+                checked={attachDirections}
+                onChange={(e) => setAttachDirections(e.target.checked)}
+              >
+                약도 첨부하기
+              </Checkbox>
+            </Col>
+          </Row>
+        </div>
+
+        {/* 지도 검색 버튼 - showMap이 true일 때만 표시 */}
+        {showMap && (
+          <div>
+            <Button type="default" onClick={() => setShowMapPreview(!showMapPreview)} block>
+              {showMapPreview ? "지도 미리보기 닫기" : "지도에서 위치 확인"}
+            </Button>
           </div>
         )}
 
-        {/* 추천 장소 (실제 구현에서는 API 연동 필요) */}
-        <div>
-          <p className="mb-2 text-sm font-medium text-gray-700">인기 예식장</p>
-          <div className="space-y-2">
-            {[
-              "그랜드 하얏트 서울",
-              "신라호텔 다이너스티홀",
-              "더 플라자 그랜드볼룸",
-              "그랜드 워커힐 서울",
-            ].map((venue, index) => (
-              <button
-                key={index}
-                onClick={() => onVenueChange("venueName", venue)}
-                className="w-full rounded-md border border-gray-200 bg-gray-50 p-2 text-left text-sm hover:bg-gray-100"
-              >
-                {venue}
-              </button>
-            ))}
+        {/* 지도 미리보기 - showMap이 true이고 showMapPreview가 true일 때만 표시 */}
+        {showMap && showMapPreview && (
+          <div className="overflow-hidden rounded-lg border border-gray-200">
+            <div ref={mapRef} className="h-64 w-full" style={{ minHeight: "300px" }}></div>
+            {coordinates && (
+              <div className="bg-gray-50 p-2 text-xs text-gray-500">
+                <p>
+                  위도: {coordinates.lat.toFixed(6)}, 경도: {coordinates.lng.toFixed(6)}
+                </p>
+              </div>
+            )}
           </div>
-        </div>
+        )}
+
+        {/* 약도 첨부 - attachDirections이 true일 때만 표시 */}
+        {attachDirections && (
+          <div className="pt-2">
+            <Button block type="dashed">
+              약도 이미지 업로드
+            </Button>
+            <p className="mt-1 text-xs text-gray-500">
+              약도 이미지는 JPG, PNG 형식으로 업로드해주세요.
+            </p>
+          </div>
+        )}
       </div>
     </CustomizationCard>
   );

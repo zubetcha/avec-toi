@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 import CustomizationCard from "./CustomizationCard";
+import { DatePicker, TimePicker } from "antd";
+import dayjs from "dayjs";
+import type { Dayjs } from "dayjs";
+import locale from "antd/lib/date-picker/locale/ko_KR";
 
 interface WeddingDateCardProps {
   date: string;
@@ -16,42 +20,34 @@ export default function WeddingDateCard({
   onDateChange,
   onTimeChange,
 }: WeddingDateCardProps) {
-  const [selectedDate, setSelectedDate] = useState(date);
-  const [selectedTime, setSelectedTime] = useState(time);
+  // date 형식: "2024-05-11", time 형식: "14:30"
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(date ? dayjs(date) : null);
+  const [selectedTime, setSelectedTime] = useState<Dayjs | null>(
+    time ? dayjs(`2000-01-01T${time}`) : null
+  );
 
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedDate(e.target.value);
-    onDateChange(e.target.value);
+  const handleDateChange = (value: Dayjs | null) => {
+    setSelectedDate(value);
+    if (value) {
+      onDateChange(value.format("YYYY-MM-DD"));
+    }
   };
 
-  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedTime(e.target.value);
-    onTimeChange(e.target.value);
+  const handleTimeChange = (value: Dayjs | null) => {
+    setSelectedTime(value);
+    if (value) {
+      onTimeChange(value.format("HH:mm"));
+    }
   };
 
-  const timeOptions = [
-    "11:00",
-    "11:30",
-    "12:00",
-    "12:30",
-    "13:00",
-    "13:30",
-    "14:00",
-    "14:30",
-    "15:00",
-    "15:30",
-    "16:00",
-    "16:30",
-    "17:00",
-    "17:30",
-    "18:00",
-    "18:30",
-    "19:00",
-  ];
+  // DatePicker 스타일 커스터마이징
+  const datePickerStyle = {
+    width: "100%",
+  };
 
-  const handleTimeSelect = (time: string) => {
-    setSelectedTime(time);
-    onTimeChange(time);
+  // TimePicker 스타일 커스터마이징
+  const timePickerStyle = {
+    width: "100%",
   };
 
   return (
@@ -59,50 +55,32 @@ export default function WeddingDateCard({
       <div className="space-y-4">
         <p className="text-sm text-gray-600">예식 날짜와 시간을 선택하세요.</p>
 
-        <div>
-          <label htmlFor="wedding-date" className="mb-1 block text-sm font-medium text-gray-700">
-            예식 날짜
-          </label>
-          <input
-            type="date"
-            id="wedding-date"
-            value={selectedDate}
-            onChange={handleDateChange}
-            className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="wedding-time" className="mb-1 block text-sm font-medium text-gray-700">
-            예식 시간
-          </label>
-          <div className="flex items-center space-x-2">
-            <input
-              type="time"
-              id="wedding-time"
-              value={selectedTime}
-              onChange={handleTimeChange}
-              className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none"
+        <div className="flex flex-col sm:flex-row sm:gap-4">
+          <div className="mb-4 sm:mb-0 sm:flex-1">
+            <label className="mb-1 block text-sm font-medium text-gray-700">예식 날짜</label>
+            <DatePicker
+              value={selectedDate}
+              onChange={handleDateChange}
+              style={datePickerStyle}
+              locale={locale}
+              placeholder="날짜 선택"
+              format="YYYY년 MM월 DD일"
             />
           </div>
-        </div>
 
-        <div>
-          <p className="mb-2 text-sm font-medium text-gray-700">시간 빠른 선택</p>
-          <div className="flex flex-wrap gap-2">
-            {timeOptions.map((time) => (
-              <button
-                key={time}
-                onClick={() => handleTimeSelect(time)}
-                className={`rounded-md px-3 py-1 text-sm transition-all ${
-                  selectedTime === time
-                    ? "bg-rose-500 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
-              >
-                {time}
-              </button>
-            ))}
+          <div className="sm:flex-1">
+            <label className="mb-1 block text-sm font-medium text-gray-700">예식 시간</label>
+            <TimePicker
+              value={selectedTime}
+              onChange={handleTimeChange}
+              style={timePickerStyle}
+              format="HH:mm"
+              placeholder="시간 선택"
+              minuteStep={30}
+              showNow={false}
+              hideDisabledOptions
+              use12Hours={false}
+            />
           </div>
         </div>
       </div>

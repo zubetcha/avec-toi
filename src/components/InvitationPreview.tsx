@@ -59,7 +59,7 @@ export default function InvitationPreview({
             </div>
           </div>
 
-          <div className="border-t border-b py-4 text-center text-sm text-gray-600">
+          <div className="border-t border-b py-4 text-center text-sm leading-5 text-gray-600">
             {message.split("\n").map((line, index) => (
               <p key={index}>{line}</p>
             ))}
