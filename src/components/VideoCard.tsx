@@ -133,7 +133,7 @@ export default function VideoCard({ video, onVideoChange }: VideoCardProps) {
             />
             <button
               onClick={handleYoutubeSubmit}
-              className="rounded-md bg-rose-500 px-3 py-2 text-sm font-medium text-white hover:bg-rose-600"
+              className="rounded-md bg-indigo-200 px-3 py-2 text-sm font-medium text-white hover:bg-rose-600"
             >
               추가
             </button>

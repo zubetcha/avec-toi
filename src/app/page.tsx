@@ -3,7 +3,7 @@ import Banner from "@/components/Banner";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col items-center font-[family-name:var(--font-geist-sans)]">
+    <div className="flex min-h-screen flex-col items-center">
       <Banner />
     </div>
   );

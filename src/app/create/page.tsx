@@ -289,10 +289,10 @@ export default function CreatePage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center gap-6 font-[family-name:var(--font-geist-sans)]">
+    <div className="flex min-h-screen flex-col items-center gap-6">
       <div className="flex w-full max-w-6xl justify-between gap-8 p-8">
         {/* 왼쪽 커스터마이징 영역 */}
-        <div className="w-full space-y-6 overflow-y-auto">
+        <div className="w-full space-y-6">
           <ThemeCard
             currentThemeId={formData.selectedTemplate}
             onThemeChange={(id) => handleTemplateSelect(id)}
@@ -447,7 +447,7 @@ export default function CreatePage() {
         </div>
 
         {/* 미리보기 영역 */}
-        <div className="sticky top-32 h-[calc(100vh-12rem)] w-160">
+        <div className="sticky top-24 h-[calc(100vh-14rem)] w-160">
           <InvitationPreview
             title={formData.title || undefined}
             date={formData.weddingDate || undefined}

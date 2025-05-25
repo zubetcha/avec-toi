@@ -42,7 +42,13 @@ module.exports = {
           950: "#020617",
         },
       },
+      fontFamily: {
+        suit: ["var(--font-suit)"],
+      },
     },
   },
   plugins: [],
+  corePlugins: {
+    preflight: false,
+  },
 };

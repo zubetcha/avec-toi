@@ -26,17 +26,14 @@ export default function CustomizationCard({
   };
 
   return (
-    <div
-      className="mb-4 overflow-hidden rounded-lg bg-white shadow-sm"
-      style={{ boxShadow: "0px 4px 12px 0px #0000001F" }}
-    >
-      <div className="flex items-center justify-between bg-gray-50 px-4 py-3">
+    <div className="mb-4 rounded-2xl bg-white shadow-[0_4px_16px_0px_rgba(17,17,26,0.03),0_8px_32px_0px_rgba(17,17,26,0.03)]">
+      <div className="flex items-center justify-between rounded-2xl border-b border-gray-100 bg-white px-4 py-3">
         <div className="flex items-center gap-3">
           {/* 토글 버튼 (좌측) */}
           <button
             onClick={toggleEnabled}
             className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-gray-200 focus:outline-none ${
-              isEnabled ? "bg-rose-500" : "bg-gray-200"
+              isEnabled ? "bg-indigo-200" : "bg-gray-200"
             }`}
             role="switch"
             aria-checked={isEnabled}
@@ -47,7 +44,7 @@ export default function CustomizationCard({
               }`}
             />
           </button>
-          <h3 className="font-medium text-gray-800">{title}</h3>
+          <h3 className="m-0 font-medium text-gray-800">{title}</h3>
         </div>
 
         {/* 확장/축소 버튼 (우측) */}

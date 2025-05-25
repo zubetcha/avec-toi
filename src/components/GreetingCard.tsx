@@ -55,6 +55,7 @@ export default function GreetingCard({
             onChange={(e) => onTitleChange(e.target.value)}
             style={inputStyles}
             placeholder="청첩장 제목을 입력하세요"
+            size="middle"
           />
         </div>
 
@@ -73,6 +74,7 @@ export default function GreetingCard({
             onChange={(e) => onMessageChange(e.target.value)}
             style={textAreaStyles}
             placeholder="인사말을 입력하세요"
+            size="middle"
           />
         </div>
 

@@ -76,6 +76,7 @@ export default function BasicInfoCard({
                   onChange={(e) => onGroomInfoChange("lastName", e.target.value)}
                   style={inputStyles}
                   placeholder="성"
+                  size="middle"
                 />
               </div>
               <div className="w-1/6">
@@ -91,6 +92,7 @@ export default function BasicInfoCard({
                   onChange={(e) => onGroomInfoChange("firstName", e.target.value)}
                   style={inputStyles}
                   placeholder="이름"
+                  size="middle"
                 />
               </div>
               <div className="w-1/6">
@@ -128,6 +130,7 @@ export default function BasicInfoCard({
                   onChange={(e) => onGroomInfoChange("fatherName", e.target.value)}
                   style={inputStyles}
                   placeholder="아버지 성함"
+                  size="middle"
                 />
                 <div className="flex items-center">
                   <Checkbox
@@ -157,6 +160,7 @@ export default function BasicInfoCard({
                   onChange={(e) => onGroomInfoChange("motherName", e.target.value)}
                   style={inputStyles}
                   placeholder="어머니 성함"
+                  size="middle"
                 />
                 <div className="flex items-center">
                   <Checkbox
@@ -192,6 +196,7 @@ export default function BasicInfoCard({
                   onChange={(e) => onBrideInfoChange("lastName", e.target.value)}
                   style={inputStyles}
                   placeholder="성"
+                  size="middle"
                 />
               </div>
               <div className="w-1/6">
@@ -207,6 +212,7 @@ export default function BasicInfoCard({
                   onChange={(e) => onBrideInfoChange("firstName", e.target.value)}
                   style={inputStyles}
                   placeholder="이름"
+                  size="middle"
                 />
               </div>
               <div className="w-1/6">
@@ -244,6 +250,7 @@ export default function BasicInfoCard({
                   onChange={(e) => onBrideInfoChange("fatherName", e.target.value)}
                   style={inputStyles}
                   placeholder="아버지 성함"
+                  size="middle"
                 />
                 <div className="flex items-center">
                   <Checkbox
@@ -273,6 +280,7 @@ export default function BasicInfoCard({
                   onChange={(e) => onBrideInfoChange("motherName", e.target.value)}
                   style={inputStyles}
                   placeholder="어머니 성함"
+                  size="middle"
                 />
                 <div className="flex items-center">
                   <Checkbox

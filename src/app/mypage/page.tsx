@@ -8,7 +8,7 @@ export default function MyPage() {
   ];
 
   return (
-    <div className="flex min-h-screen flex-col items-center gap-6 p-8 font-[family-name:var(--font-geist-sans)]">
+    <div className="flex min-h-screen flex-col items-center gap-6 p-8">
       <div className="mb-6 flex w-full max-w-4xl items-center justify-between">
         <h1 className="text-2xl font-bold">내 청첩장</h1>
         <Link href="/" className="text-sm text-gray-600 hover:text-black">

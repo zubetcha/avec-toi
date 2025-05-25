@@ -142,6 +142,7 @@ export default function WeddingVenueCard({
             value={venueTitle}
             onChange={(e) => setVenueTitle(e.target.value)}
             placeholder="예식 장소 제목을 입력하세요 (예: 웨딩 본식)"
+            size="middle"
           />
         </div>
 
@@ -151,6 +152,7 @@ export default function WeddingVenueCard({
             value={venueName}
             onChange={(e) => onVenueChange("venueName", e.target.value)}
             placeholder="예식장 이름을 입력하세요"
+            size="middle"
           />
         </div>
 
@@ -161,6 +163,7 @@ export default function WeddingVenueCard({
               value={venueAddress}
               onChange={(e) => onVenueChange("venueAddress", e.target.value)}
               placeholder="예식장 주소를 입력하세요"
+              size="middle"
             />
             {showMapPreview && (
               <Button icon={<SearchOutlined />} onClick={searchAddress} type="primary">
@@ -176,6 +179,7 @@ export default function WeddingVenueCard({
             value={venueHall}
             onChange={(e) => setVenueHall(e.target.value)}
             placeholder="예식장 층/홀을 입력하세요 (예: 3층 그랜드홀)"
+            size="middle"
           />
         </div>
 
@@ -186,6 +190,7 @@ export default function WeddingVenueCard({
             onChange={(e) => setVenuePhone(e.target.value)}
             placeholder="예식장 연락처를 입력하세요"
             prefix={<PhoneOutlined />}
+            size="middle"
           />
         </div>
 

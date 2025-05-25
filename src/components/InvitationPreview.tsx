@@ -29,8 +29,8 @@ export default function InvitationPreview({
   });
 
   return (
-    <div className="flex h-full w-full flex-col overflow-hidden rounded-lg border bg-white shadow-lg">
-      <div className="border-b bg-gray-50 p-4">
+    <div className="flex h-full w-full flex-col overflow-hidden rounded-2xl bg-white shadow-[0_4px_16px_0px_rgba(17,17,26,0.03),0_8px_32px_0px_rgba(17,17,26,0.03)]">
+      <div className="border-b border-gray-100 bg-white p-4">
         <h3 className="text-sm font-medium text-gray-700">미리보기</h3>
       </div>
 

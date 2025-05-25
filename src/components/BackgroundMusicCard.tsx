@@ -99,7 +99,7 @@ export default function BackgroundMusicCard({
                 onChange={() => onAutoPlayChange(!autoPlay)}
                 className="peer absolute h-0 w-0 opacity-0"
               />
-              <span className="absolute inset-0 cursor-pointer rounded-full bg-gray-300 transition duration-300 peer-checked:bg-rose-500"></span>
+              <span className="absolute inset-0 cursor-pointer rounded-full bg-gray-300 transition duration-300 peer-checked:bg-indigo-200"></span>
               <span className="absolute top-0.5 left-0.5 h-4 w-4 transform rounded-full bg-white transition duration-300 peer-checked:translate-x-4"></span>
             </div>
           </div>

@@ -109,7 +109,7 @@ export default function UrlShareCard({
                   onClick={handleSave}
                   disabled={!!errorMessage}
                   className={`rounded-md px-3 py-1 text-xs font-medium text-white ${
-                    errorMessage ? "bg-gray-400" : "bg-rose-500 hover:bg-rose-600"
+                    errorMessage ? "bg-gray-400" : "bg-indigo-200 hover:bg-rose-600"
                   }`}
                 >
                   저장

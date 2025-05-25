@@ -135,7 +135,7 @@ export default function BankAccountCard({ accounts = [], onAccountsChange }: Ban
                   <div>
                     <Text className="mb-1 block text-xs">관계</Text>
                     <Input
-                      size="small"
+                      size="middle"
                       value={account.relationship}
                       onChange={(e) =>
                         handleAccountChange(account.id, "relationship", e.target.value)
@@ -164,7 +164,7 @@ export default function BankAccountCard({ accounts = [], onAccountsChange }: Ban
                   <div>
                     <Text className="mb-1 block text-xs">계좌번호</Text>
                     <Input
-                      size="small"
+                      size="middle"
                       value={account.accountNumber}
                       onChange={(e) =>
                         handleAccountChange(account.id, "accountNumber", e.target.value)
@@ -176,7 +176,7 @@ export default function BankAccountCard({ accounts = [], onAccountsChange }: Ban
                   <div>
                     <Text className="mb-1 block text-xs">예금주</Text>
                     <Input
-                      size="small"
+                      size="middle"
                       value={account.accountHolder}
                       onChange={(e) =>
                         handleAccountChange(account.id, "accountHolder", e.target.value)

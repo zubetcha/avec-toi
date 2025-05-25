@@ -101,7 +101,7 @@ export default function TransportationCard({
                     <span className="text-sm font-medium text-gray-700">{transport.type}</span>
                   ) : (
                     <Input
-                      size="small"
+                      size="middle"
                       value={transport.type}
                       onChange={(e) => handleTransportTypeChange(index, e.target.value)}
                       placeholder="교통 수단 이름"
