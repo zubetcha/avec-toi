@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
+import { Button } from "antd";
 
 export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -24,19 +25,20 @@ export default function Header() {
             </Link>
             <Link
               href="/create"
-              className="rounded-md px-4 py-2 text-sm font-medium text-rose-700 transition-colors hover:bg-gray-50"
+              className="rounded-md px-4 py-2 text-sm font-medium text-gray-900 transition-colors hover:bg-gray-50"
             >
               모바일 청첩장
             </Link>
           </div>
 
           <div className="flex items-center">
-            <button
+            <Button
+              type="primary"
               onClick={handleAuthClick}
-              className="rounded-md border border-rose-300 px-4 py-2 text-sm font-medium text-rose-700 transition-colors hover:bg-rose-100"
+              className="text-gray-900 hover:bg-indigo-100 hover:text-gray-900"
             >
               {isLoggedIn ? "로그아웃" : "로그인"}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

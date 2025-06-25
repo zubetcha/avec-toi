@@ -2,6 +2,7 @@
 
 import CustomizationCard from "./CustomizationCard";
 import { Input, Button } from "antd";
+import { useInvitationStore } from "../stores/invitation-store";
 
 // Input 컴포넌트 스타일 커스터마이징
 const inputStyles = {
@@ -15,19 +16,9 @@ const textAreaStyles = {
   height: "128px",
 };
 
-interface GreetingCardProps {
-  message: string;
-  onMessageChange: (message: string) => void;
-  title: string;
-  onTitleChange: (title: string) => void;
-}
+export default function GreetingCard() {
+  const { data, setField } = useInvitationStore();
 
-export default function GreetingCard({
-  message,
-  onMessageChange,
-  title,
-  onTitleChange,
-}: GreetingCardProps) {
   const presetMessages = [
     "서로 다른 두 사람이 만나 하나의 사랑으로 새 출발합니다.\n소중한 분들을 초대하여 뜻깊은 자리를 빛내주시면 감사하겠습니다.",
     "평생을 같이하고 싶은 사람을 만났습니다.\n서로 아껴주고 이해하며 사랑을 베풀며 살고 싶습니다.\n저희의 새로운 출발을 축복해 주세요.",
@@ -36,7 +27,7 @@ export default function GreetingCard({
   ];
 
   const handlePresetSelect = (preset: string) => {
-    onMessageChange(preset);
+    setField("message", preset);
   };
 
   return (
@@ -51,8 +42,8 @@ export default function GreetingCard({
           </label>
           <Input
             id="invitation-title"
-            value={title}
-            onChange={(e) => onTitleChange(e.target.value)}
+            value={data.title}
+            onChange={(e) => setField("title", e.target.value)}
             style={inputStyles}
             placeholder="청첩장 제목을 입력하세요"
             size="middle"
@@ -70,8 +61,8 @@ export default function GreetingCard({
           </label>
           <Input.TextArea
             id="greeting-message"
-            value={message}
-            onChange={(e) => onMessageChange(e.target.value)}
+            value={data.message}
+            onChange={(e) => setField("message", e.target.value)}
             style={textAreaStyles}
             placeholder="인사말을 입력하세요"
             size="middle"
@@ -82,17 +73,20 @@ export default function GreetingCard({
           <p className="mb-2 text-sm font-medium text-gray-700">또는 인사말 템플릿 선택</p>
           <div className="space-y-2">
             {presetMessages.map((preset, index) => (
-              <button
+              <Button
                 key={index}
                 onClick={() => handlePresetSelect(preset)}
                 className="w-full rounded-md border border-gray-200 bg-gray-50 p-3 text-left text-sm hover:bg-gray-100"
+                type="default"
+                size="large"
+                style={{ height: "auto", whiteSpace: "normal", textAlign: "left" }}
               >
                 {preset.split("\n").map((line, i) => (
                   <span key={i} className="block">
                     {line}
                   </span>
                 ))}
-              </button>
+              </Button>
             ))}
           </div>
         </div>

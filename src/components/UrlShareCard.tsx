@@ -1,30 +1,25 @@
 "use client";
 
 import { useState } from "react";
+import { Input, Button, message } from "antd";
+import { EditOutlined, CopyOutlined, DownloadOutlined } from "@ant-design/icons";
 import CustomizationCard from "./CustomizationCard";
+import { useInvitationStore } from "../stores/invitation-store";
 
-interface UrlShareCardProps {
-  customUrl?: string;
-  onCustomUrlChange: (url: string) => void;
-  invitationId: string;
-}
-
-export default function UrlShareCard({
-  customUrl = "",
-  onCustomUrlChange,
-  invitationId,
-}: UrlShareCardProps) {
+export default function UrlShareCard() {
+  const { data, setField } = useInvitationStore();
   const [isEditing, setIsEditing] = useState(false);
-  const [urlInput, setUrlInput] = useState(customUrl);
+  const [urlInput, setUrlInput] = useState(data.customUrl);
   const [errorMessage, setErrorMessage] = useState("");
 
   const baseUrl = "https://example.com/invite/";
+  const invitationId = "12345"; // 실제 구현에서는 동적으로 생성된 ID 사용
   const defaultUrl = `${baseUrl}${invitationId}`;
-  const displayUrl = customUrl || defaultUrl;
+  const displayUrl = data.customUrl || defaultUrl;
 
   const handleEditClick = () => {
     setIsEditing(true);
-    setUrlInput(customUrl || "");
+    setUrlInput(data.customUrl || "");
   };
 
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,13 +37,13 @@ export default function UrlShareCard({
   const handleSave = () => {
     if (errorMessage) return;
 
-    onCustomUrlChange(urlInput);
+    setField("customUrl", urlInput);
     setIsEditing(false);
   };
 
   const handleCancel = () => {
     setIsEditing(false);
-    setUrlInput(customUrl);
+    setUrlInput(data.customUrl);
     setErrorMessage("");
   };
 
@@ -56,10 +51,11 @@ export default function UrlShareCard({
     navigator.clipboard
       .writeText(displayUrl)
       .then(() => {
-        alert("URL이 클립보드에 복사되었습니다.");
+        message.success("URL이 클립보드에 복사되었습니다.");
       })
       .catch((err) => {
         console.error("URL 복사 실패:", err);
+        message.error("URL 복사에 실패했습니다.");
       });
   };
 
@@ -72,60 +68,48 @@ export default function UrlShareCard({
           <div className="mb-3 flex items-center justify-between">
             <p className="text-sm font-medium text-gray-700">청첩장 주소</p>
             {!isEditing && (
-              <button
+              <Button
                 onClick={handleEditClick}
-                className="rounded-md px-2 py-1 text-xs font-medium text-rose-600 hover:bg-rose-50"
+                icon={<EditOutlined />}
+                type="text"
+                size="small"
+                className="text-rose-600 hover:bg-rose-50"
               >
                 수정
-              </button>
+              </Button>
             )}
           </div>
 
           {isEditing ? (
             <div>
-              <div className="flex items-center">
-                <span className="rounded-l-md border border-r-0 border-gray-300 bg-gray-50 p-2 text-sm text-gray-500">
-                  {baseUrl}
-                </span>
-                <input
-                  type="text"
+              <Input.Group compact>
+                <Input
+                  addonBefore={baseUrl}
                   value={urlInput}
                   onChange={handleUrlChange}
-                  className="flex-1 rounded-r-md border border-gray-300 p-2 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none"
                   placeholder="원하는 URL을 입력하세요"
+                  status={errorMessage ? "error" : ""}
                 />
-              </div>
+              </Input.Group>
 
               {errorMessage && <p className="mt-1 text-xs text-red-500">{errorMessage}</p>}
 
               <div className="mt-3 flex items-center justify-end space-x-2">
-                <button
-                  onClick={handleCancel}
-                  className="rounded-md border border-gray-300 px-3 py-1 text-xs font-medium text-gray-700 hover:bg-gray-50"
-                >
+                <Button onClick={handleCancel} size="small">
                   취소
-                </button>
-                <button
-                  onClick={handleSave}
-                  disabled={!!errorMessage}
-                  className={`rounded-md px-3 py-1 text-xs font-medium text-white ${
-                    errorMessage ? "bg-gray-400" : "bg-indigo-200 hover:bg-rose-600"
-                  }`}
-                >
+                </Button>
+                <Button onClick={handleSave} disabled={!!errorMessage} type="primary" size="small">
                   저장
-                </button>
+                </Button>
               </div>
             </div>
           ) : (
-            <div className="flex items-center rounded-md border border-gray-200 bg-gray-50">
-              <span className="flex-1 truncate p-2 text-sm">{displayUrl}</span>
-              <button
-                onClick={handleCopyClick}
-                className="rounded-r-md border-l border-gray-200 bg-white p-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-              >
+            <Input.Group compact>
+              <Input value={displayUrl} readOnly className="bg-gray-50" />
+              <Button onClick={handleCopyClick} icon={<CopyOutlined />}>
                 복사
-              </button>
-            </div>
+              </Button>
+            </Input.Group>
           )}
         </div>
 
@@ -133,9 +117,14 @@ export default function UrlShareCard({
         <div className="rounded-lg border border-gray-200 bg-white p-3">
           <div className="mb-3 flex items-center justify-between">
             <p className="text-sm font-medium text-gray-700">QR 코드</p>
-            <button className="rounded-md px-2 py-1 text-xs font-medium text-rose-600 hover:bg-rose-50">
+            <Button
+              icon={<DownloadOutlined />}
+              type="text"
+              size="small"
+              className="text-rose-600 hover:bg-rose-50"
+            >
               다운로드
-            </button>
+            </Button>
           </div>
 
           <div className="flex flex-col items-center justify-center">
@@ -154,13 +143,15 @@ export default function UrlShareCard({
           <p className="mb-2 text-sm font-medium text-gray-700">청첩장 공유하기</p>
           <div className="grid grid-cols-4 gap-2">
             {["카카오톡", "페이스북", "인스타그램", "문자"].map((platform) => (
-              <button
+              <Button
                 key={platform}
-                className="flex flex-col items-center rounded-md bg-gray-50 p-3 hover:bg-gray-100"
+                type="text"
+                className="flex h-auto flex-col items-center bg-gray-50 p-3 hover:bg-gray-100"
+                block
               >
                 <div className="mb-1 h-8 w-8 rounded-full bg-gray-200"></div>
                 <span className="text-xs">{platform}</span>
-              </button>
+              </Button>
             ))}
           </div>
         </div>

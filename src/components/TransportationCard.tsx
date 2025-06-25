@@ -4,6 +4,7 @@ import { useState } from "react";
 import CustomizationCard from "./CustomizationCard";
 import { Input, Checkbox, Button, message } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
+import { useInvitationStore } from "../stores/invitation-store";
 
 const { TextArea } = Input;
 
@@ -13,48 +14,29 @@ interface TransportInfo {
   enabled: boolean;
 }
 
-interface TransportationCardProps {
-  transportations: TransportInfo[];
-  onTransportChange: (transports: TransportInfo[]) => void;
-}
-
-export default function TransportationCard({
-  transportations = [],
-  onTransportChange,
-}: TransportationCardProps) {
-  const [transports, setTransports] = useState<TransportInfo[]>(
-    transportations.length > 0
-      ? transportations
-      : [
-          { type: "지하철", description: "", enabled: true },
-          { type: "버스", description: "", enabled: true },
-          { type: "자가용", description: "", enabled: true },
-          { type: "셔틀버스", description: "", enabled: false },
-        ]
-  );
+export default function TransportationCard() {
+  const { data, setField } = useInvitationStore();
 
   const handleTransportToggle = (index: number) => {
-    const updatedTransports = transports.map((transport, i) => {
+    const updatedTransports = data.transportations.map((transport, i) => {
       if (i === index) {
         return { ...transport, enabled: !transport.enabled };
       }
       return transport;
     });
 
-    setTransports(updatedTransports);
-    onTransportChange(updatedTransports);
+    setField("transportations", updatedTransports);
   };
 
   const handleDescriptionChange = (index: number, value: string) => {
-    const updatedTransports = transports.map((transport, i) => {
+    const updatedTransports = data.transportations.map((transport, i) => {
       if (i === index) {
         return { ...transport, description: value };
       }
       return transport;
     });
 
-    setTransports(updatedTransports);
-    onTransportChange(updatedTransports);
+    setField("transportations", updatedTransports);
   };
 
   const handleTransportDelete = (index: number) => {
@@ -63,22 +45,28 @@ export default function TransportationCard({
       return;
     }
 
-    const updatedTransports = transports.filter((_, i) => i !== index);
-    setTransports(updatedTransports);
-    onTransportChange(updatedTransports);
+    const updatedTransports = data.transportations.filter((_, i) => i !== index);
+    setField("transportations", updatedTransports);
     message.success("교통 수단이 삭제되었습니다.");
   };
 
   const handleTransportTypeChange = (index: number, value: string) => {
-    const updatedTransports = transports.map((transport, i) => {
+    const updatedTransports = data.transportations.map((transport, i) => {
       if (i === index) {
         return { ...transport, type: value };
       }
       return transport;
     });
 
-    setTransports(updatedTransports);
-    onTransportChange(updatedTransports);
+    setField("transportations", updatedTransports);
+  };
+
+  const handleTransportAdd = () => {
+    const newTransports = [
+      ...data.transportations,
+      { type: "기타", description: "", enabled: true },
+    ];
+    setField("transportations", newTransports);
   };
 
   return (
@@ -88,7 +76,7 @@ export default function TransportationCard({
           예식장으로 오시는 교통 수단 정보를 입력하세요. 사용하지 않을 항목은 체크를 해제하세요.
         </p>
 
-        {transports.map((transport, index) => (
+        {data.transportations.map((transport, index) => (
           <div key={index} className="rounded-lg border border-gray-200 bg-white p-3">
             <div className="mb-2 flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -137,16 +125,7 @@ export default function TransportationCard({
         ))}
 
         {/* 교통 수단 추가 버튼 */}
-        <Button
-          type="dashed"
-          block
-          icon={<PlusOutlined />}
-          onClick={() => {
-            const newTransports = [...transports, { type: "기타", description: "", enabled: true }];
-            setTransports(newTransports);
-            onTransportChange(newTransports);
-          }}
-        >
+        <Button type="dashed" block icon={<PlusOutlined />} onClick={handleTransportAdd}>
           교통 수단 추가
         </Button>
       </div>

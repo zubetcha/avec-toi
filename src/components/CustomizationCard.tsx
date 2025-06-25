@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, ReactNode } from "react";
+import { Button, Switch } from "antd";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface CustomizationCardProps {
@@ -27,34 +28,31 @@ export default function CustomizationCard({
 
   return (
     <div className="mb-4 rounded-2xl bg-white shadow-[0_4px_16px_0px_rgba(17,17,26,0.03),0_8px_32px_0px_rgba(17,17,26,0.03)]">
-      <div className="flex items-center justify-between rounded-2xl border-b border-gray-100 bg-white px-4 py-3">
+      <div
+        className={`flex items-center justify-between border-b border-gray-100 bg-white px-4 py-3 ${
+          isExpanded ? "rounded-t-2xl" : "rounded-2xl"
+        }`}
+      >
         <div className="flex items-center gap-3">
-          {/* 토글 버튼 (좌측) */}
-          <button
-            onClick={toggleEnabled}
-            className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-gray-200 focus:outline-none ${
-              isEnabled ? "bg-indigo-200" : "bg-gray-200"
-            }`}
-            role="switch"
-            aria-checked={isEnabled}
-          >
-            <span
-              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                isEnabled ? "translate-x-5" : "translate-x-0"
-              }`}
-            />
-          </button>
-          <h3 className="m-0 font-medium text-gray-800">{title}</h3>
+          {/* 토글 스위치 (좌측) */}
+          <Switch checked={isEnabled} onChange={toggleEnabled} size="default" />
+          <h3 className="mb-0 font-medium text-gray-800">{title}</h3>
         </div>
 
         {/* 확장/축소 버튼 (우측) */}
-        <button
+        <Button
           onClick={toggleExpand}
-          className="rounded p-1 text-gray-500 hover:bg-gray-100 focus:outline-none"
-          aria-label={isExpanded ? "접기" : "펼치기"}
-        >
-          {isExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
-        </button>
+          type="text"
+          size="middle"
+          icon={
+            isExpanded ? (
+              <ChevronUp strokeWidth={1.5} className="h-6 w-6" />
+            ) : (
+              <ChevronDown strokeWidth={1.5} className="h-6 w-6" />
+            )
+          }
+          className="text-gray-500 hover:bg-gray-100"
+        />
       </div>
 
       {/* 카드 내용 */}

@@ -4,16 +4,12 @@ import { useState } from "react";
 import CustomizationCard from "./CustomizationCard";
 import { Input, Button, Radio, Space } from "antd";
 import { EditOutlined } from "@ant-design/icons";
+import { useInvitationStore } from "../stores/invitation-store";
 
 const { TextArea } = Input;
 
-interface EndingCardProps {
-  endingMessage: string;
-  onEndingMessageChange: (message: string) => void;
-}
-
-export default function EndingCard({ endingMessage, onEndingMessageChange }: EndingCardProps) {
-  const [effect, setEffect] = useState<string>("페이드인");
+export default function EndingCard() {
+  const { data, setField } = useInvitationStore();
 
   const presetMessages = [
     "소중한 분들을 초대합니다.\n함께해 주신다면 더없는 기쁨이겠습니다.",
@@ -23,7 +19,11 @@ export default function EndingCard({ endingMessage, onEndingMessageChange }: End
   ];
 
   const handlePresetSelect = (preset: string) => {
-    onEndingMessageChange(preset);
+    setField("endingMessage", preset);
+  };
+
+  const handleEffectChange = (effect: "페이드인" | "슬라이드" | "타이핑" | "반짝임") => {
+    setField("endingMessageEffect", effect);
   };
 
   return (
@@ -34,8 +34,8 @@ export default function EndingCard({ endingMessage, onEndingMessageChange }: End
         <div>
           <label className="mb-1 block text-sm font-medium text-gray-700">엔딩 메시지</label>
           <TextArea
-            value={endingMessage}
-            onChange={(e) => onEndingMessageChange(e.target.value)}
+            value={data.endingMessage}
+            onChange={(e) => setField("endingMessage", e.target.value)}
             placeholder="엔딩 메시지를 입력하세요"
             autoSize={{ minRows: 3, maxRows: 6 }}
           />
@@ -47,7 +47,11 @@ export default function EndingCard({ endingMessage, onEndingMessageChange }: End
             {presetMessages.map((preset, index) => (
               <div
                 key={index}
-                className="cursor-pointer rounded-md border border-gray-200 bg-gray-50 p-3 shadow-sm transition-all hover:bg-gray-100 hover:shadow"
+                className={`cursor-pointer rounded-md border p-3 shadow-sm transition-all hover:shadow ${
+                  data.endingMessage === preset
+                    ? "border-blue-500 bg-blue-50"
+                    : "border-gray-200 bg-gray-50 hover:bg-gray-100"
+                }`}
                 onClick={() => handlePresetSelect(preset)}
               >
                 <div className="text-sm">
@@ -64,12 +68,12 @@ export default function EndingCard({ endingMessage, onEndingMessageChange }: End
         <div className="mt-2 rounded-lg border border-gray-200 bg-gray-50 p-4">
           <p className="mb-2 text-sm font-medium text-gray-700">메시지 표시 효과</p>
           <Radio.Group
-            value={effect}
-            onChange={(e) => setEffect(e.target.value)}
+            value={data.endingMessageEffect}
+            onChange={(e) => handleEffectChange(e.target.value)}
             buttonStyle="solid"
           >
             <Space wrap>
-              {["페이드인", "슬라이드", "타이핑", "반짝임"].map((option) => (
+              {(["페이드인", "슬라이드", "타이핑", "반짝임"] as const).map((option) => (
                 <Radio.Button key={option} value={option}>
                   {option}
                 </Radio.Button>

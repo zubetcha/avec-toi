@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { Checkbox, Button } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import CustomizationCard from "./CustomizationCard";
+import { useInvitationStore } from "../stores/invitation-store";
 
 interface FlowerVendor {
   id: string;
@@ -10,19 +12,9 @@ interface FlowerVendor {
   logo: string;
 }
 
-interface FlowerCardProps {
-  enabled: boolean;
-  onToggle: (enabled: boolean) => void;
-  selectedVendors: string[];
-  onVendorsChange: (vendorIds: string[]) => void;
-}
+export default function FlowerCard() {
+  const { data, setField } = useInvitationStore();
 
-export default function FlowerCard({
-  enabled = true,
-  onToggle,
-  selectedVendors = [],
-  onVendorsChange,
-}: FlowerCardProps) {
   // 화환 업체 목업 데이터
   const vendors: FlowerVendor[] = [
     {
@@ -52,15 +44,19 @@ export default function FlowerCard({
   ];
 
   const handleVendorToggle = (vendorId: string) => {
-    if (selectedVendors.includes(vendorId)) {
-      onVendorsChange(selectedVendors.filter((id) => id !== vendorId));
+    const currentVendors = data.selectedFlowerVendors;
+    if (currentVendors.includes(vendorId)) {
+      setField(
+        "selectedFlowerVendors",
+        currentVendors.filter((id) => id !== vendorId)
+      );
     } else {
-      onVendorsChange([...selectedVendors, vendorId]);
+      setField("selectedFlowerVendors", [...currentVendors, vendorId]);
     }
   };
 
   return (
-    <CustomizationCard title="축하 화환 보내기" defaultEnabled={enabled}>
+    <CustomizationCard title="축하 화환 보내기" defaultEnabled={data.flowerEnabled}>
       <div className="space-y-4">
         <p className="text-sm text-gray-600">
           하객들이 청첩장을 통해 화환을 보낼 수 있도록 제휴 업체를 선택하세요.
@@ -79,20 +75,15 @@ export default function FlowerCard({
           <div className="space-y-2">
             {vendors.map((vendor) => (
               <div key={vendor.id} className="flex items-center">
-                <input
-                  type="checkbox"
-                  id={`vendor-${vendor.id}`}
-                  checked={selectedVendors.includes(vendor.id)}
+                <Checkbox
+                  checked={data.selectedFlowerVendors.includes(vendor.id)}
                   onChange={() => handleVendorToggle(vendor.id)}
-                  className="h-4 w-4 rounded border-gray-300 text-rose-500 focus:ring-rose-500"
+                  className="mr-2"
                 />
-                <label
-                  htmlFor={`vendor-${vendor.id}`}
-                  className="ml-2 flex flex-1 items-center justify-between rounded-md border border-gray-200 p-2 text-sm hover:bg-gray-50"
-                >
+                <div className="flex flex-1 items-center justify-between rounded-md border border-gray-200 p-2 text-sm hover:bg-gray-50">
                   <span className="font-medium">{vendor.name}</span>
                   <div className="h-6 w-6 bg-gray-200"></div>
-                </label>
+                </div>
               </div>
             ))}
           </div>
@@ -107,10 +98,10 @@ export default function FlowerCard({
                 <p className="text-center text-sm font-medium">축하 화환 보내기</p>
               </div>
 
-              {selectedVendors.length > 0 ? (
+              {data.selectedFlowerVendors.length > 0 ? (
                 <div className="grid grid-cols-2 gap-2">
                   {vendors
-                    .filter((vendor) => selectedVendors.includes(vendor.id))
+                    .filter((vendor) => data.selectedFlowerVendors.includes(vendor.id))
                     .map((vendor) => (
                       <div
                         key={vendor.id}
@@ -132,12 +123,9 @@ export default function FlowerCard({
         </div>
 
         {/* 직접 업체 추가 (실제 구현 시 구현 필요) */}
-        <button
-          type="button"
-          className="w-full rounded-md border border-dashed border-gray-300 bg-gray-50 p-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
-        >
-          + 직접 화환 업체 추가
-        </button>
+        <Button type="dashed" icon={<PlusOutlined />} className="w-full" block>
+          직접 화환 업체 추가
+        </Button>
       </div>
     </CustomizationCard>
   );

@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import React from "react";
 import CustomizationCard from "./CustomizationCard";
 import { Input, Select, Switch, Button, Card, Space, Typography, Row, Col } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
+import { useInvitationStore } from "../stores/invitation-store";
 
 const { Text, Paragraph } = Typography;
 const { Option } = Select;
@@ -16,34 +17,8 @@ interface BankAccount {
   relationship: string;
 }
 
-interface BankAccountCardProps {
-  accounts: BankAccount[];
-  onAccountsChange: (accounts: BankAccount[]) => void;
-}
-
-export default function BankAccountCard({ accounts = [], onAccountsChange }: BankAccountCardProps) {
-  const [bankAccounts, setBankAccounts] = useState<BankAccount[]>(
-    accounts.length > 0
-      ? accounts
-      : [
-          {
-            id: "groom-account",
-            bankName: "",
-            accountNumber: "",
-            accountHolder: "",
-            relationship: "신랑측",
-          },
-          {
-            id: "bride-account",
-            bankName: "",
-            accountNumber: "",
-            accountHolder: "",
-            relationship: "신부측",
-          },
-        ]
-  );
-
-  const [showAccounts, setShowAccounts] = useState(true);
+export default function BankAccountCard() {
+  const { data, setField } = useInvitationStore();
 
   const banks = [
     "KB국민은행",
@@ -58,16 +33,42 @@ export default function BankAccountCard({ accounts = [], onAccountsChange }: Ban
     "케이뱅크",
   ];
 
+  // 초기 계좌가 없을 때 기본 계좌 추가
+  const initializeDefaultAccounts = () => {
+    if (data.bankAccounts.length === 0) {
+      const defaultAccounts: BankAccount[] = [
+        {
+          id: "groom-account",
+          bankName: "",
+          accountNumber: "",
+          accountHolder: "",
+          relationship: "신랑측",
+        },
+        {
+          id: "bride-account",
+          bankName: "",
+          accountNumber: "",
+          accountHolder: "",
+          relationship: "신부측",
+        },
+      ];
+      setField("bankAccounts", defaultAccounts);
+    }
+  };
+
+  // 컴포넌트 마운트 시 기본 계좌 초기화
+  React.useEffect(() => {
+    initializeDefaultAccounts();
+  }, []);
+
   const handleAccountChange = (id: string, field: keyof BankAccount, value: string) => {
-    const updatedAccounts = bankAccounts.map((account) => {
+    const updatedAccounts = data.bankAccounts.map((account) => {
       if (account.id === id) {
         return { ...account, [field]: value };
       }
       return account;
     });
-
-    setBankAccounts(updatedAccounts);
-    onAccountsChange(updatedAccounts);
+    setField("bankAccounts", updatedAccounts);
   };
 
   const handleAddAccount = () => {
@@ -78,16 +79,13 @@ export default function BankAccountCard({ accounts = [], onAccountsChange }: Ban
       accountHolder: "",
       relationship: "",
     };
-
-    const updatedAccounts = [...bankAccounts, newAccount];
-    setBankAccounts(updatedAccounts);
-    onAccountsChange(updatedAccounts);
+    const updatedAccounts = [...data.bankAccounts, newAccount];
+    setField("bankAccounts", updatedAccounts);
   };
 
   const handleRemoveAccount = (id: string) => {
-    const updatedAccounts = bankAccounts.filter((account) => account.id !== id);
-    setBankAccounts(updatedAccounts);
-    onAccountsChange(updatedAccounts);
+    const updatedAccounts = data.bankAccounts.filter((account) => account.id !== id);
+    setField("bankAccounts", updatedAccounts);
   };
 
   return (
@@ -102,8 +100,8 @@ export default function BankAccountCard({ accounts = [], onAccountsChange }: Ban
             </Text>
             <Switch
               size="small"
-              checked={showAccounts}
-              onChange={setShowAccounts}
+              checked={data.showBankAccounts}
+              onChange={(checked) => setField("showBankAccounts", checked)}
               className="bg-gray-300"
               checkedChildren=""
               unCheckedChildren=""
@@ -112,7 +110,7 @@ export default function BankAccountCard({ accounts = [], onAccountsChange }: Ban
         </Row>
 
         <Space direction="vertical" size="small" className="w-full">
-          {bankAccounts.map((account) => (
+          {data.bankAccounts.map((account) => (
             <Card
               key={account.id}
               size="small"

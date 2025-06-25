@@ -6,37 +6,30 @@ import { DatePicker, TimePicker } from "antd";
 import dayjs from "dayjs";
 import type { Dayjs } from "dayjs";
 import locale from "antd/lib/date-picker/locale/ko_KR";
+import { useInvitationStore } from "../stores/invitation-store";
 
-interface WeddingDateCardProps {
-  date: string;
-  time: string;
-  onDateChange: (date: string) => void;
-  onTimeChange: (time: string) => void;
-}
+export default function WeddingDateCard() {
+  const { data, setField } = useInvitationStore();
 
-export default function WeddingDateCard({
-  date,
-  time,
-  onDateChange,
-  onTimeChange,
-}: WeddingDateCardProps) {
   // date 형식: "2024-05-11", time 형식: "14:30"
-  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(date ? dayjs(date) : null);
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(
+    data.weddingDate ? dayjs(data.weddingDate) : null
+  );
   const [selectedTime, setSelectedTime] = useState<Dayjs | null>(
-    time ? dayjs(`2000-01-01T${time}`) : null
+    data.weddingTime ? dayjs(`2000-01-01T${data.weddingTime}`) : null
   );
 
   const handleDateChange = (value: Dayjs | null) => {
     setSelectedDate(value);
     if (value) {
-      onDateChange(value.format("YYYY-MM-DD"));
+      setField("weddingDate", value.format("YYYY-MM-DD"));
     }
   };
 
   const handleTimeChange = (value: Dayjs | null) => {
     setSelectedTime(value);
     if (value) {
-      onTimeChange(value.format("HH:mm"));
+      setField("weddingTime", value.format("HH:mm"));
     }
   };
 

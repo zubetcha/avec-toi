@@ -2,26 +2,18 @@
 
 import { useState } from "react";
 import CustomizationCard from "./CustomizationCard";
+import { Button, Upload } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import { useInvitationStore } from "../stores/invitation-store";
 
-interface MainScreenCardProps {
-  mainImage?: string;
-  onImageChange?: (imageUrl: string) => void;
-}
+export default function MainScreenCard() {
+  const { data, setField } = useInvitationStore();
 
-export default function MainScreenCard({ mainImage, onImageChange }: MainScreenCardProps) {
-  const [selectedImage, setSelectedImage] = useState<string | null>(mainImage || null);
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // 실제 구현에서는 이미지 업로드 로직이 필요합니다
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedImage(imageUrl);
-
-      if (onImageChange) {
-        onImageChange(imageUrl);
-      }
-    }
+  const handleImageUpload = (file: File) => {
+    // 실제 구현에서는 이미지 업로드 로직이 필요합니다
+    const imageUrl = URL.createObjectURL(file);
+    setField("mainImage", imageUrl);
+    return false; // prevent upload
   };
 
   const presetImages = [
@@ -32,10 +24,7 @@ export default function MainScreenCard({ mainImage, onImageChange }: MainScreenC
   ];
 
   const handlePresetSelect = (imageUrl: string) => {
-    setSelectedImage(imageUrl);
-    if (onImageChange) {
-      onImageChange(imageUrl);
-    }
+    setField("mainImage", imageUrl);
   };
 
   return (
@@ -45,10 +34,10 @@ export default function MainScreenCard({ mainImage, onImageChange }: MainScreenC
           <p className="mb-2 text-sm text-gray-600">메인 화면에 표시할 이미지를 선택하세요.</p>
 
           {/* 현재 선택된 이미지 미리보기 */}
-          {selectedImage && (
+          {data.mainImage && (
             <div className="mb-4 overflow-hidden rounded-lg border border-gray-200">
               <img
-                src={selectedImage}
+                src={data.mainImage}
                 alt="메인 이미지 미리보기"
                 className="h-48 w-full object-cover"
               />
@@ -57,19 +46,16 @@ export default function MainScreenCard({ mainImage, onImageChange }: MainScreenC
 
           {/* 이미지 업로드 버튼 */}
           <div className="mb-4">
-            <label
-              htmlFor="main-image-upload"
-              className="flex w-full cursor-pointer items-center justify-center rounded-md border border-dashed border-gray-300 bg-gray-50 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100"
+            <Upload
+              beforeUpload={handleImageUpload}
+              accept="image/*"
+              showUploadList={false}
+              maxCount={1}
             >
-              <span>내 이미지 업로드</span>
-              <input
-                id="main-image-upload"
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleImageUpload}
-              />
-            </label>
+              <Button icon={<UploadOutlined />} className="w-full" type="dashed" size="large">
+                내 이미지 업로드
+              </Button>
+            </Upload>
           </div>
 
           {/* 프리셋 이미지 선택 */}
@@ -77,21 +63,22 @@ export default function MainScreenCard({ mainImage, onImageChange }: MainScreenC
             <p className="mb-2 text-sm font-medium text-gray-700">또는 프리셋 이미지 선택</p>
             <div className="grid grid-cols-2 gap-2">
               {presetImages.map((image, index) => (
-                <button
+                <Button
                   key={index}
                   onClick={() => handlePresetSelect(image)}
-                  className={`overflow-hidden rounded-md border-2 transition-all ${
-                    selectedImage === image
-                      ? "border-rose-500"
-                      : "border-transparent hover:border-gray-300"
-                  }`}
+                  type={data.mainImage === image ? "primary" : "default"}
+                  className="h-20 overflow-hidden p-0"
+                  style={{
+                    border:
+                      data.mainImage === image ? "2px solid #f43f5e" : "2px solid transparent",
+                  }}
                 >
                   <img
                     src={image}
                     alt={`프리셋 이미지 ${index + 1}`}
-                    className="h-20 w-full object-cover"
+                    className="h-full w-full object-cover"
                   />
-                </button>
+                </Button>
               ))}
             </div>
           </div>

@@ -1,31 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { Input, Switch, Button } from "antd";
+import { SendOutlined } from "@ant-design/icons";
 import CustomizationCard from "./CustomizationCard";
+import { useInvitationStore } from "../stores/invitation-store";
 
-interface GuestbookCardProps {
-  enabled: boolean;
-  onToggle: (enabled: boolean) => void;
-  requirePassword: boolean;
-  onPasswordRequireToggle: (required: boolean) => void;
-  password: string;
-  onPasswordChange: (password: string) => void;
-  moderationEnabled: boolean;
-  onModerationToggle: (enabled: boolean) => void;
-}
+const { TextArea } = Input;
 
-export default function GuestbookCard({
-  enabled = true,
-  onToggle,
-  requirePassword = false,
-  onPasswordRequireToggle,
-  password = "",
-  onPasswordChange,
-  moderationEnabled = true,
-  onModerationToggle,
-}: GuestbookCardProps) {
+export default function GuestbookCard() {
+  const { data, setField } = useInvitationStore();
+
   return (
-    <CustomizationCard title="방명록" defaultEnabled={enabled}>
+    <CustomizationCard title="방명록" defaultEnabled={data.guestbookEnabled}>
       <div className="space-y-4">
         <p className="text-sm text-gray-600">
           청첩장을 방문한 하객들이 축하 메시지를 남길 수 있는 방명록 기능을 설정하세요.
@@ -38,21 +24,15 @@ export default function GuestbookCard({
               <label htmlFor="require-password" className="text-sm font-medium text-gray-700">
                 방명록 작성 시 비밀번호 요구
               </label>
-              <div className="relative inline-block h-5 w-9">
-                <input
-                  type="checkbox"
-                  id="require-password"
-                  checked={requirePassword}
-                  onChange={() => onPasswordRequireToggle(!requirePassword)}
-                  className="peer absolute h-0 w-0 opacity-0"
-                />
-                <span className="absolute inset-0 cursor-pointer rounded-full bg-gray-300 transition duration-300 peer-checked:bg-indigo-200"></span>
-                <span className="absolute top-0.5 left-0.5 h-4 w-4 transform rounded-full bg-white transition duration-300 peer-checked:translate-x-4"></span>
-              </div>
+              <Switch
+                checked={data.guestbookRequirePassword}
+                onChange={(checked) => setField("guestbookRequirePassword", checked)}
+                size="small"
+              />
             </div>
 
             {/* 비밀번호 설정 */}
-            {requirePassword && (
+            {data.guestbookRequirePassword && (
               <div>
                 <label
                   htmlFor="guestbook-password"
@@ -60,12 +40,10 @@ export default function GuestbookCard({
                 >
                   방명록 비밀번호
                 </label>
-                <input
-                  type="password"
+                <Input.Password
                   id="guestbook-password"
-                  value={password}
-                  onChange={(e) => onPasswordChange(e.target.value)}
-                  className="w-full rounded-md border border-gray-300 p-2 text-sm focus:border-rose-500 focus:ring-1 focus:ring-rose-500 focus:outline-none"
+                  value={data.guestbookPassword}
+                  onChange={(e) => setField("guestbookPassword", e.target.value)}
                   placeholder="비밀번호를 입력하세요"
                 />
                 <p className="mt-1 text-xs text-gray-500">
@@ -82,17 +60,11 @@ export default function GuestbookCard({
                 </label>
                 <p className="text-xs text-gray-500">방명록 내용을 검토 후 표시할 수 있습니다.</p>
               </div>
-              <div className="relative inline-block h-5 w-9">
-                <input
-                  type="checkbox"
-                  id="moderation-enabled"
-                  checked={moderationEnabled}
-                  onChange={() => onModerationToggle(!moderationEnabled)}
-                  className="peer absolute h-0 w-0 opacity-0"
-                />
-                <span className="absolute inset-0 cursor-pointer rounded-full bg-gray-300 transition duration-300 peer-checked:bg-indigo-200"></span>
-                <span className="absolute top-0.5 left-0.5 h-4 w-4 transform rounded-full bg-white transition duration-300 peer-checked:translate-x-4"></span>
-              </div>
+              <Switch
+                checked={data.guestbookModerationEnabled}
+                onChange={(checked) => setField("guestbookModerationEnabled", checked)}
+                size="small"
+              />
             </div>
           </div>
         </div>
@@ -110,13 +82,7 @@ export default function GuestbookCard({
                 >
                   이름
                 </label>
-                <input
-                  type="text"
-                  id="preview-name"
-                  disabled
-                  className="w-full rounded-md border border-gray-200 bg-gray-50 p-1.5 text-sm"
-                  placeholder="이름을 입력하세요"
-                />
+                <Input id="preview-name" disabled placeholder="이름을 입력하세요" size="small" />
               </div>
 
               <div className="mb-3">
@@ -126,15 +92,16 @@ export default function GuestbookCard({
                 >
                   축하 메시지
                 </label>
-                <textarea
+                <TextArea
                   id="preview-message"
                   disabled
-                  className="h-20 w-full rounded-md border border-gray-200 bg-gray-50 p-1.5 text-sm"
+                  rows={3}
                   placeholder="축하 메시지를 입력하세요"
+                  size="small"
                 />
               </div>
 
-              {requirePassword && (
+              {data.guestbookRequirePassword && (
                 <div className="mb-3">
                   <label
                     htmlFor="preview-password"
@@ -142,23 +109,25 @@ export default function GuestbookCard({
                   >
                     비밀번호
                   </label>
-                  <input
-                    type="password"
+                  <Input.Password
                     id="preview-password"
                     disabled
-                    className="w-full rounded-md border border-gray-200 bg-gray-50 p-1.5 text-sm"
                     placeholder="비밀번호를 입력하세요"
+                    size="small"
                   />
                 </div>
               )}
 
-              <button
-                type="button"
+              <Button
+                type="primary"
                 disabled
-                className="w-full rounded-md bg-rose-100 p-2 text-sm font-medium text-rose-700"
+                icon={<SendOutlined />}
+                block
+                size="small"
+                className="border-rose-100 bg-rose-100 text-rose-700"
               >
                 메시지 남기기
-              </button>
+              </Button>
             </div>
 
             {/* 샘플 방명록 목록 */}

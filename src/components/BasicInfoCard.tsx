@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import CustomizationCard from "./CustomizationCard";
 import { Select, Input, Checkbox } from "antd";
 import "antd/dist/reset.css";
+import { useInvitationStore } from "../stores/invitation-store";
 
 // Select 컴포넌트 스타일 커스터마이징
 const selectStyles = {
@@ -17,44 +17,9 @@ const inputStyles = {
   height: "38px",
 };
 
-interface BasicInfoCardProps {
-  groomInfo: {
-    lastName: string;
-    firstName: string;
-    isChild: "son" | "daughter";
-    fatherName: string;
-    isFatherDeceased: boolean;
-    motherName: string;
-    isMotherDeceased: boolean;
-  };
-  brideInfo: {
-    lastName: string;
-    firstName: string;
-    isChild: "son" | "daughter";
-    fatherName: string;
-    isFatherDeceased: boolean;
-    motherName: string;
-    isMotherDeceased: boolean;
-  };
-  options: {
-    showDeceasedWithFlower: boolean;
-    showBrideFirst: boolean;
-  };
-  onInfoChange: (field: string, value: string) => void;
-  onGroomInfoChange: (field: string, value: any) => void;
-  onBrideInfoChange: (field: string, value: any) => void;
-  onOptionsChange: (field: string, value: boolean) => void;
-}
+export default function BasicInfoCard() {
+  const { data, setNested, setField } = useInvitationStore();
 
-export default function BasicInfoCard({
-  groomInfo,
-  brideInfo,
-  options,
-  onInfoChange,
-  onGroomInfoChange,
-  onBrideInfoChange,
-  onOptionsChange,
-}: BasicInfoCardProps) {
   return (
     <CustomizationCard title="기본 정보">
       <div className="space-y-6">
@@ -72,8 +37,8 @@ export default function BasicInfoCard({
                 </label>
                 <Input
                   id="groomLastName"
-                  value={groomInfo.lastName}
-                  onChange={(e) => onGroomInfoChange("lastName", e.target.value)}
+                  value={data.groomInfo.lastName}
+                  onChange={(e) => setNested("groomInfo", "lastName", e.target.value)}
                   style={inputStyles}
                   placeholder="성"
                   size="middle"
@@ -88,8 +53,8 @@ export default function BasicInfoCard({
                 </label>
                 <Input
                   id="groomFirstName"
-                  value={groomInfo.firstName}
-                  onChange={(e) => onGroomInfoChange("firstName", e.target.value)}
+                  value={data.groomInfo.firstName}
+                  onChange={(e) => setNested("groomInfo", "firstName", e.target.value)}
                   style={inputStyles}
                   placeholder="이름"
                   size="middle"
@@ -104,8 +69,8 @@ export default function BasicInfoCard({
                 </label>
                 <Select
                   id="groomIsChild"
-                  value={groomInfo.isChild}
-                  onChange={(value) => onGroomInfoChange("isChild", value)}
+                  value={data.groomInfo.isChild}
+                  onChange={(value) => setNested("groomInfo", "isChild", value)}
                   style={selectStyles}
                   options={[
                     { value: "son", label: "아들" },
@@ -126,8 +91,8 @@ export default function BasicInfoCard({
               <div className="flex w-1/2 items-center gap-3">
                 <Input
                   id="groomFatherName"
-                  value={groomInfo.fatherName}
-                  onChange={(e) => onGroomInfoChange("fatherName", e.target.value)}
+                  value={data.groomInfo.fatherName}
+                  onChange={(e) => setNested("groomInfo", "fatherName", e.target.value)}
                   style={inputStyles}
                   placeholder="아버지 성함"
                   size="middle"
@@ -135,8 +100,8 @@ export default function BasicInfoCard({
                 <div className="flex items-center">
                   <Checkbox
                     id="groomFatherDeceased"
-                    checked={groomInfo.isFatherDeceased}
-                    onChange={(e) => onGroomInfoChange("isFatherDeceased", e.target.checked)}
+                    checked={data.groomInfo.isFatherDeceased}
+                    onChange={(e) => setNested("groomInfo", "isFatherDeceased", e.target.checked)}
                     className="text-rose-500"
                   />
                   <label htmlFor="groomFatherDeceased" className="ml-2 text-sm text-gray-600">
@@ -156,8 +121,8 @@ export default function BasicInfoCard({
               <div className="flex w-1/2 items-center gap-3">
                 <Input
                   id="groomMotherName"
-                  value={groomInfo.motherName}
-                  onChange={(e) => onGroomInfoChange("motherName", e.target.value)}
+                  value={data.groomInfo.motherName}
+                  onChange={(e) => setNested("groomInfo", "motherName", e.target.value)}
                   style={inputStyles}
                   placeholder="어머니 성함"
                   size="middle"
@@ -165,8 +130,8 @@ export default function BasicInfoCard({
                 <div className="flex items-center">
                   <Checkbox
                     id="groomMotherDeceased"
-                    checked={groomInfo.isMotherDeceased}
-                    onChange={(e) => onGroomInfoChange("isMotherDeceased", e.target.checked)}
+                    checked={data.groomInfo.isMotherDeceased}
+                    onChange={(e) => setNested("groomInfo", "isMotherDeceased", e.target.checked)}
                     className="text-rose-500"
                   />
                   <label htmlFor="groomMotherDeceased" className="ml-2 text-sm text-gray-600">
@@ -192,8 +157,8 @@ export default function BasicInfoCard({
                 </label>
                 <Input
                   id="brideLastName"
-                  value={brideInfo.lastName}
-                  onChange={(e) => onBrideInfoChange("lastName", e.target.value)}
+                  value={data.brideInfo.lastName}
+                  onChange={(e) => setNested("brideInfo", "lastName", e.target.value)}
                   style={inputStyles}
                   placeholder="성"
                   size="middle"
@@ -208,8 +173,8 @@ export default function BasicInfoCard({
                 </label>
                 <Input
                   id="brideFirstName"
-                  value={brideInfo.firstName}
-                  onChange={(e) => onBrideInfoChange("firstName", e.target.value)}
+                  value={data.brideInfo.firstName}
+                  onChange={(e) => setNested("brideInfo", "firstName", e.target.value)}
                   style={inputStyles}
                   placeholder="이름"
                   size="middle"
@@ -224,8 +189,8 @@ export default function BasicInfoCard({
                 </label>
                 <Select
                   id="brideIsChild"
-                  value={brideInfo.isChild}
-                  onChange={(value) => onBrideInfoChange("isChild", value)}
+                  value={data.brideInfo.isChild}
+                  onChange={(value) => setNested("brideInfo", "isChild", value)}
                   style={selectStyles}
                   options={[
                     { value: "son", label: "아들" },
@@ -246,8 +211,8 @@ export default function BasicInfoCard({
               <div className="flex w-1/2 items-center gap-3">
                 <Input
                   id="brideFatherName"
-                  value={brideInfo.fatherName}
-                  onChange={(e) => onBrideInfoChange("fatherName", e.target.value)}
+                  value={data.brideInfo.fatherName}
+                  onChange={(e) => setNested("brideInfo", "fatherName", e.target.value)}
                   style={inputStyles}
                   placeholder="아버지 성함"
                   size="middle"
@@ -255,8 +220,8 @@ export default function BasicInfoCard({
                 <div className="flex items-center">
                   <Checkbox
                     id="brideFatherDeceased"
-                    checked={brideInfo.isFatherDeceased}
-                    onChange={(e) => onBrideInfoChange("isFatherDeceased", e.target.checked)}
+                    checked={data.brideInfo.isFatherDeceased}
+                    onChange={(e) => setNested("brideInfo", "isFatherDeceased", e.target.checked)}
                     className="text-rose-500"
                   />
                   <label htmlFor="brideFatherDeceased" className="ml-2 text-sm text-gray-600">
@@ -276,8 +241,8 @@ export default function BasicInfoCard({
               <div className="flex w-1/2 items-center gap-3">
                 <Input
                   id="brideMotherName"
-                  value={brideInfo.motherName}
-                  onChange={(e) => onBrideInfoChange("motherName", e.target.value)}
+                  value={data.brideInfo.motherName}
+                  onChange={(e) => setNested("brideInfo", "motherName", e.target.value)}
                   style={inputStyles}
                   placeholder="어머니 성함"
                   size="middle"
@@ -285,8 +250,8 @@ export default function BasicInfoCard({
                 <div className="flex items-center">
                   <Checkbox
                     id="brideMotherDeceased"
-                    checked={brideInfo.isMotherDeceased}
-                    onChange={(e) => onBrideInfoChange("isMotherDeceased", e.target.checked)}
+                    checked={data.brideInfo.isMotherDeceased}
+                    onChange={(e) => setNested("brideInfo", "isMotherDeceased", e.target.checked)}
                     className="text-rose-500"
                   />
                   <label htmlFor="brideMotherDeceased" className="ml-2 text-sm text-gray-600">
@@ -305,8 +270,8 @@ export default function BasicInfoCard({
             <div className="flex items-center">
               <Checkbox
                 id="showDeceasedWithFlower"
-                checked={options.showDeceasedWithFlower}
-                onChange={(e) => onOptionsChange("showDeceasedWithFlower", e.target.checked)}
+                checked={data.options.showDeceasedWithFlower}
+                onChange={(e) => setNested("options", "showDeceasedWithFlower", e.target.checked)}
                 className="text-rose-500"
               />
               <label htmlFor="showDeceasedWithFlower" className="ml-2 text-sm text-gray-700">
@@ -317,8 +282,8 @@ export default function BasicInfoCard({
             <div className="flex items-center">
               <Checkbox
                 id="showBrideFirst"
-                checked={options.showBrideFirst}
-                onChange={(e) => onOptionsChange("showBrideFirst", e.target.checked)}
+                checked={data.options.showBrideFirst}
+                onChange={(e) => setNested("options", "showBrideFirst", e.target.checked)}
                 className="text-rose-500"
               />
               <label htmlFor="showBrideFirst" className="ml-2 text-sm text-gray-700">

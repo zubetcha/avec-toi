@@ -1,43 +1,38 @@
 "use client";
 
-import { useState } from "react";
 import CustomizationCard from "./CustomizationCard";
 import { Input, Button, Checkbox, Space, Divider, Form, Row, Col } from "antd";
 import { PhoneOutlined } from "@ant-design/icons";
+import { useInvitationStore } from "../stores/invitation-store";
 
-interface ContactInfo {
-  id: string;
-  name: string;
-  phoneNumber: string;
-  showCall: boolean;
-  showSms: boolean;
-}
-
-interface ContactCardProps {
-  contacts: {
-    groom: ContactInfo;
-    groomFather: ContactInfo;
-    groomMother: ContactInfo;
-    bride: ContactInfo;
-    brideFather: ContactInfo;
-    brideMother: ContactInfo;
-  };
-  onContactsChange: (contacts: any) => void;
-}
-
-export default function ContactCard({ contacts, onContactsChange }: ContactCardProps) {
-  const [contactInfo, setContactInfo] = useState<any>(contacts);
+export default function ContactCard() {
+  const { data, setField } = useInvitationStore();
 
   const handleContactChange = (id: string, field: string, value: any) => {
     const updatedContacts = {
-      ...contactInfo,
+      ...data.contacts,
       [id]: {
-        ...contactInfo[id],
+        ...data.contacts[id as keyof typeof data.contacts],
         [field]: value,
       },
     };
-    setContactInfo(updatedContacts);
-    onContactsChange(updatedContacts);
+    setField("contacts", updatedContacts);
+  };
+
+  const handleOptionChange = (optionType: "showCall" | "showSms", value: boolean) => {
+    const contactIds = [
+      "groom",
+      "groomFather",
+      "groomMother",
+      "bride",
+      "brideFather",
+      "brideMother",
+    ];
+    const updatedContacts = { ...data.contacts };
+    contactIds.forEach((id) => {
+      updatedContacts[id as keyof typeof updatedContacts][optionType] = value;
+    });
+    setField("contacts", updatedContacts);
   };
 
   const contactRow = (id: string, label: string) => (
@@ -49,7 +44,7 @@ export default function ContactCard({ contacts, onContactsChange }: ContactCardP
         <Input
           size="small"
           placeholder="이름"
-          value={contactInfo[id].name}
+          value={data.contacts[id as keyof typeof data.contacts].name}
           onChange={(e) => handleContactChange(id, "name", e.target.value)}
         />
       </Col>
@@ -58,7 +53,7 @@ export default function ContactCard({ contacts, onContactsChange }: ContactCardP
           size="small"
           placeholder="전화번호"
           prefix={<PhoneOutlined className="text-gray-400" />}
-          value={contactInfo[id].phoneNumber}
+          value={data.contacts[id as keyof typeof data.contacts].phoneNumber}
           onChange={(e) => handleContactChange(id, "phoneNumber", e.target.value)}
         />
       </Col>
@@ -87,32 +82,16 @@ export default function ContactCard({ contacts, onContactsChange }: ContactCardP
           <Row gutter={16}>
             <Col span={12}>
               <Checkbox
-                checked={contactInfo.groom.showCall && contactInfo.bride.showCall}
-                onChange={(e) => {
-                  const value = e.target.checked;
-                  const updatedContacts = { ...contactInfo };
-                  Object.keys(updatedContacts).forEach((key) => {
-                    updatedContacts[key].showCall = value;
-                  });
-                  setContactInfo(updatedContacts);
-                  onContactsChange(updatedContacts);
-                }}
+                checked={data.contacts.groom.showCall && data.contacts.bride.showCall}
+                onChange={(e) => handleOptionChange("showCall", e.target.checked)}
               >
                 <span className="text-sm text-gray-700">전화 버튼 표시</span>
               </Checkbox>
             </Col>
             <Col span={12}>
               <Checkbox
-                checked={contactInfo.groom.showSms && contactInfo.bride.showSms}
-                onChange={(e) => {
-                  const value = e.target.checked;
-                  const updatedContacts = { ...contactInfo };
-                  Object.keys(updatedContacts).forEach((key) => {
-                    updatedContacts[key].showSms = value;
-                  });
-                  setContactInfo(updatedContacts);
-                  onContactsChange(updatedContacts);
-                }}
+                checked={data.contacts.groom.showSms && data.contacts.bride.showSms}
+                onChange={(e) => handleOptionChange("showSms", e.target.checked)}
               >
                 <span className="text-sm text-gray-700">문자 버튼 표시</span>
               </Checkbox>
