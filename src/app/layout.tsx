@@ -4,6 +4,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Header from "@/components/Header";
 import Script from "next/script";
+import SupabaseProvider from "@/app/_auth/supabase-provider";
+import AuthProvider from "@/components/AuthProvider";
 
 const suit = localFont({
   src: "../../public/fonts/SUIT-Variable.woff2",
@@ -42,8 +44,12 @@ export default function RootLayout({
             },
           }}
         >
-          <Header />
-          <main className="bg-slate-50 pt-16">{children}</main>
+          <SupabaseProvider>
+            <AuthProvider>
+              <Header />
+              <main className="bg-slate-50 pt-16">{children}</main>
+            </AuthProvider>
+          </SupabaseProvider>
         </ConfigProvider>
       </body>
     </html>

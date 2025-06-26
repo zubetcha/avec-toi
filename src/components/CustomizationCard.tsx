@@ -23,7 +23,17 @@ export default function CustomizationCard({
   };
 
   const toggleEnabled = () => {
-    setIsEnabled(!isEnabled);
+    const newEnabled = !isEnabled;
+    setIsEnabled(newEnabled);
+
+    // 스위치 동작에 따른 카드 확장/축소
+    if (newEnabled && !isExpanded) {
+      // 스위치가 켜지고 카드가 접혀있으면 카드를 펼침
+      setIsExpanded(true);
+    } else if (!newEnabled && isExpanded) {
+      // 스위치가 꺼지고 카드가 펼쳐져있으면 카드를 접음
+      setIsExpanded(false);
+    }
   };
 
   return (
