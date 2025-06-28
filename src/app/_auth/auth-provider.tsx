@@ -2,7 +2,7 @@
 
 import { useEffect, ReactNode, useRef } from "react";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { useAuthStore } from "../stores/auth-store";
+import { useAuthStore } from "../../stores/auth-store";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -11,7 +11,7 @@ interface AuthProviderProps {
 export default function AuthProvider({ children }: AuthProviderProps) {
   const supabase = useSupabaseClient();
   const user = useUser();
-  const { setUser, setLoading } = useAuthStore();
+  const { setUser } = useAuthStore();
   const initializedRef = useRef(false);
 
   useEffect(() => {

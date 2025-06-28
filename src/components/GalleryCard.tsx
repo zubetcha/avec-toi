@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { Button, Input, Upload, message } from "antd";
 import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
-import type { UploadFile, UploadProps } from "antd";
+import type { UploadProps } from "antd";
 import CustomizationCard from "./CustomizationCard";
 import { useInvitationStore } from "../stores/invitation-store";
 

@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import CustomizationCard from "./CustomizationCard";
 import { Input, Typography, Upload, Button } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { useInvitationStore } from "../stores/invitation-store";
 
-const { Text, Title } = Typography;
+const { Text } = Typography;
 const { TextArea } = Input;
 
 export default function KakaoShareCard() {
@@ -122,10 +123,12 @@ export default function KakaoShareCard() {
 
               <div className="mb-3 overflow-hidden rounded-md border border-gray-200">
                 {data.kakaoShareThumbnail ? (
-                  <img
+                  <Image
                     src={data.kakaoShareThumbnail}
                     alt="카카오톡 썸네일"
                     className="h-32 w-full object-cover"
+                    width={800}
+                    height={400}
                   />
                 ) : (
                   <div className="flex h-32 w-full items-center justify-center bg-gray-100">

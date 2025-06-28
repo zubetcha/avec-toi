@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Input, Button, Switch, Upload, message } from "antd";
+import { Input, Button, Switch, Upload } from "antd";
 import { UploadOutlined, SearchOutlined, CloseOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
 import CustomizationCard from "./CustomizationCard";

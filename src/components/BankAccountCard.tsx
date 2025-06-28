@@ -2,11 +2,11 @@
 
 import React from "react";
 import CustomizationCard from "./CustomizationCard";
-import { Input, Select, Switch, Button, Card, Space, Typography, Row, Col } from "antd";
+import { Input, Select, Switch, Button, Card, Space, Typography, Row } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useInvitationStore } from "../stores/invitation-store";
 
-const { Text, Paragraph } = Typography;
+const { Text } = Typography;
 const { Option } = Select;
 
 interface BankAccount {
@@ -59,7 +59,7 @@ export default function BankAccountCard() {
   // 컴포넌트 마운트 시 기본 계좌 초기화
   React.useEffect(() => {
     initializeDefaultAccounts();
-  }, []);
+  }, [initializeDefaultAccounts]);
 
   const handleAccountChange = (id: string, field: keyof BankAccount, value: string) => {
     const updatedAccounts = data.bankAccounts.map((account) => {

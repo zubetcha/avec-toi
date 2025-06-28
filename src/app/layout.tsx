@@ -5,7 +5,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Script from "next/script";
 import SupabaseProvider from "@/app/_auth/supabase-provider";
-import AuthProvider from "@/components/AuthProvider";
+import AuthProvider from "@/app/_auth/auth-provider";
 
 const suit = localFont({
   src: "../../public/fonts/SUIT-Variable.woff2",

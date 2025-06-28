@@ -1,7 +1,7 @@
 "use client";
 
 import CustomizationCard from "./CustomizationCard";
-import { Input, Button, Checkbox, Space, Divider, Form, Row, Col } from "antd";
+import { Input, Checkbox, Divider, Row, Col } from "antd";
 import { PhoneOutlined } from "@ant-design/icons";
 import { useInvitationStore } from "../stores/invitation-store";
 

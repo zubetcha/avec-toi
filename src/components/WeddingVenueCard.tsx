@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import CustomizationCard from "./CustomizationCard";
-import { Input, Button, Checkbox, Space, Row, Col } from "antd";
+import { Input, Button, Checkbox, Row, Col } from "antd";
 import { SearchOutlined, PhoneOutlined } from "@ant-design/icons";
 import { useInvitationStore } from "../stores/invitation-store";
 

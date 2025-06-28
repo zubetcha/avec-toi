@@ -18,7 +18,7 @@ const inputStyles = {
 };
 
 export default function BasicInfoCard() {
-  const { data, setNested, setField } = useInvitationStore();
+  const { data, setNested } = useInvitationStore();
 
   return (
     <CustomizationCard title="기본 정보">

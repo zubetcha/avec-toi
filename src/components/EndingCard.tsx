@@ -1,9 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import CustomizationCard from "./CustomizationCard";
-import { Input, Button, Radio, Space } from "antd";
-import { EditOutlined } from "@ant-design/icons";
+import { Input, Radio, Space } from "antd";
 import { useInvitationStore } from "../stores/invitation-store";
 
 const { TextArea } = Input;
