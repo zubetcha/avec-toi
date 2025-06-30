@@ -1,5 +1,3 @@
-"use client";
-
 import InvitationPreview from "@/components/InvitationPreview";
 import ThemeCard from "@/components/ThemeCard";
 import BasicInfoCard from "@/components/BasicInfoCard";

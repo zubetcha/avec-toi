@@ -5,7 +5,7 @@ import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
 import CustomizationCard from "./CustomizationCard";
 import { useInvitationStore } from "../stores/invitation-store";
-
+import Image from "next/image";
 interface GalleryImage {
   id: string;
   url: string;
@@ -45,16 +45,6 @@ export default function GalleryCard() {
       }
       return image;
     });
-
-    setField("galleryImages", updatedImages);
-  };
-
-  const handleReorder = (dragIndex: number, dropIndex: number) => {
-    const updatedImages = [...data.galleryImages];
-    const draggedImage = updatedImages[dragIndex];
-
-    updatedImages.splice(dragIndex, 1);
-    updatedImages.splice(dropIndex, 0, draggedImage);
 
     setField("galleryImages", updatedImages);
   };
@@ -106,7 +96,7 @@ export default function GalleryCard() {
                   key={image.id}
                   className="group relative overflow-hidden rounded-lg border border-gray-200"
                 >
-                  <img
+                  <Image
                     src={image.url}
                     alt={image.caption || `갤러리 이미지 ${index + 1}`}
                     className="h-32 w-full object-cover"

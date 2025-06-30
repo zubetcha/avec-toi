@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import { ConfigProvider } from "antd";
 import localFont from "next/font/local";
 import "./globals.css";
-import Header from "@/components/Header";
 import Script from "next/script";
-import SupabaseProvider from "@/app/_auth/supabase-provider";
-import AuthProvider from "@/app/_auth/auth-provider";
+import Header from "@/components/Header";
+import SupabaseProvider from "@/app/_provider/supabase-provider";
+import AuthProvider from "@/app/_provider/auth-provider";
+import QueryClientProvider from "@/app/_provider/query-client-provider";
 
 const suit = localFont({
   src: "../../public/fonts/SUIT-Variable.woff2",
@@ -44,12 +45,14 @@ export default function RootLayout({
             },
           }}
         >
-          <SupabaseProvider>
-            <AuthProvider>
-              <Header />
-              <main className="bg-slate-50 pt-16">{children}</main>
-            </AuthProvider>
-          </SupabaseProvider>
+          <QueryClientProvider>
+            <SupabaseProvider>
+              <AuthProvider>
+                <Header />
+                <main className="bg-slate-50 pt-16">{children}</main>
+              </AuthProvider>
+            </SupabaseProvider>
+          </QueryClientProvider>
         </ConfigProvider>
       </body>
     </html>

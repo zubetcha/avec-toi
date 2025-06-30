@@ -1,18 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import CustomizationCard from "./CustomizationCard";
 import { Input, Checkbox, Button, message } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useInvitationStore } from "../stores/invitation-store";
 
 const { TextArea } = Input;
-
-interface TransportInfo {
-  type: string;
-  description: string;
-  enabled: boolean;
-}
 
 export default function TransportationCard() {
   const { data, setField } = useInvitationStore();

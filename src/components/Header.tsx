@@ -1,16 +1,20 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useState, useEffect, useRef } from "react";
 import { Button, message } from "antd";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import LoginModal from "./LoginModal";
+import { createClient } from "@/lib/supabase/supabase-client";
 import { useAuth } from "../hooks/useAuth";
+
+const LoginModal = dynamic(() => import("./LoginModal"), { ssr: false });
+
+const supabase = createClient();
 
 export default function Header() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const supabase = useSupabaseClient();
   const { user, isAuthenticated, userName } = useAuth();
+
   const previousAuthState = useRef(false);
 
   const handleAuthClick = () => {
@@ -23,7 +27,7 @@ export default function Header() {
 
   const handleLogout = async () => {
     try {
-      const { error } = await supabase.auth.signOut();
+      const { error } = await (supabase.auth as any).signOut();
       if (error) throw error;
 
       message.success("로그아웃되었습니다.");
@@ -35,11 +39,6 @@ export default function Header() {
 
   const handleModalClose = () => {
     setIsModalOpen(false);
-  };
-
-  const handleLoginSuccess = () => {
-    // 실제 로그인 상태는 zustand store로 관리되므로
-    // 여기서는 특별한 처리가 필요 없음
   };
 
   // 로그인 성공 시 성공 메시지 표시 (중복 방지)
@@ -86,11 +85,7 @@ export default function Header() {
         </div>
       </header>
 
-      <LoginModal
-        isOpen={isModalOpen}
-        onClose={handleModalClose}
-        onLoginSuccess={handleLoginSuccess}
-      />
+      <LoginModal isOpen={isModalOpen} onCloseAction={handleModalClose} />
     </>
   );
 }

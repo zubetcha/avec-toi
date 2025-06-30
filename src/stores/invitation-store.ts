@@ -274,15 +274,12 @@ export const useInvitationStore = create<InvitationState>()(
 
       setField: (key, value) =>
         set((state) => {
-          // immer 덕분에 가변처럼 작성 가능
           state.data[key] = value as never;
         }),
 
       setNested: (parent, key, value) =>
         set((state) => {
-          // ex) parent='groomInfo', key='firstName'
-          // @ts-ignore 필요할 수도 있음
-          state.data[parent][key] = value;
+          (state.data[parent] as any)[key] = value;
         }),
     })),
     { name: "InvitationStore" }

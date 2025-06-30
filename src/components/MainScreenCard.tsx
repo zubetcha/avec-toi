@@ -1,11 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import CustomizationCard from "./CustomizationCard";
 import { Button, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { useInvitationStore } from "../stores/invitation-store";
-
+import Image from "next/image";
 export default function MainScreenCard() {
   const { data, setField } = useInvitationStore();
 
@@ -36,7 +35,7 @@ export default function MainScreenCard() {
           {/* 현재 선택된 이미지 미리보기 */}
           {data.mainImage && (
             <div className="mb-4 overflow-hidden rounded-lg border border-gray-200">
-              <img
+              <Image
                 src={data.mainImage}
                 alt="메인 이미지 미리보기"
                 className="h-48 w-full object-cover"
@@ -73,7 +72,7 @@ export default function MainScreenCard() {
                       data.mainImage === image ? "2px solid #f43f5e" : "2px solid transparent",
                   }}
                 >
-                  <img
+                  <Image
                     src={image}
                     alt={`프리셋 이미지 ${index + 1}`}
                     className="h-full w-full object-cover"

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useInvitationStore } from "../stores/invitation-store";
-
+import Image from "next/image";
 export default function InvitationPreview() {
   const { data } = useInvitationStore();
 
@@ -33,7 +33,6 @@ export default function InvitationPreview() {
     : "";
 
   // 장소 표시
-  const displayLocation = data.weddingLocation || "";
   const displayVenue = data.venueHall
     ? `${data.weddingLocation} ${data.venueHall}`
     : data.weddingLocation;
@@ -60,7 +59,7 @@ export default function InvitationPreview() {
         {/* 메인 이미지 영역 */}
         <div className="flex h-40 items-center justify-center bg-gray-100">
           {data.mainImage ? (
-            <img src={data.mainImage} alt="메인 이미지" className="h-full w-full object-cover" />
+            <Image src={data.mainImage} alt="메인 이미지" className="h-full w-full object-cover" />
           ) : (
             <span className="text-gray-500">템플릿 {data.selectedThemeId}</span>
           )}
@@ -117,7 +116,7 @@ export default function InvitationPreview() {
               <div className="grid grid-cols-3 gap-1">
                 {data.galleryImages.slice(0, 6).map((image, index) => (
                   <div key={image.id} className="aspect-square overflow-hidden rounded bg-gray-100">
-                    <img
+                    <Image
                       src={image.url}
                       alt={image.caption || `갤러리 이미지 ${index + 1}`}
                       className="h-full w-full object-cover"

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useCallback } from "react";
 import CustomizationCard from "./CustomizationCard";
 import { Input, Select, Switch, Button, Card, Space, Typography, Row } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
@@ -34,7 +34,7 @@ export default function BankAccountCard() {
   ];
 
   // 초기 계좌가 없을 때 기본 계좌 추가
-  const initializeDefaultAccounts = () => {
+  const initializeDefaultAccounts = useCallback(() => {
     if (data.bankAccounts.length === 0) {
       const defaultAccounts: BankAccount[] = [
         {
@@ -54,7 +54,7 @@ export default function BankAccountCard() {
       ];
       setField("bankAccounts", defaultAccounts);
     }
-  };
+  }, [data.bankAccounts, setField]);
 
   // 컴포넌트 마운트 시 기본 계좌 초기화
   React.useEffect(() => {

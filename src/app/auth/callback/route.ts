@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
     try {
-      await supabase.auth.exchangeCodeForSession(code);
+      await (supabase.auth as any).exchangeCodeForSession(code);
     } catch (error) {
       console.error("OAuth 콜백 처리 중 오류:", error);
       return NextResponse.redirect(`${requestUrl.origin}/?error=auth_failed`);

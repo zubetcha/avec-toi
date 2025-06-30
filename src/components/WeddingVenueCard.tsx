@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import CustomizationCard from "./CustomizationCard";
 import { Input, Button, Checkbox, Row, Col } from "antd";
 import { SearchOutlined, PhoneOutlined } from "@ant-design/icons";
@@ -20,6 +20,48 @@ export default function WeddingVenueCard() {
   const [map, setMap] = useState<any>(null);
   const [marker, setMarker] = useState<any>(null);
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
+
+  // 주소로 좌표 검색 및 마커 표시
+  const searchAddressToCoordinate = useCallback(
+    (address: string, mapInstance: any = map) => {
+      if (!mapInstance || !window.kakao) return;
+
+      // 주소-좌표 변환 객체 생성
+      const geocoder = new window.kakao.maps.services.Geocoder();
+
+      // 주소로 좌표를 검색
+      geocoder.addressSearch(address, (result: any, status: any) => {
+        if (status === window.kakao.maps.services.Status.OK) {
+          const coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
+          setCoordinates({ lat: parseFloat(result[0].y), lng: parseFloat(result[0].x) });
+
+          // 기존 마커 제거
+          if (marker) {
+            marker.setMap(null);
+          }
+
+          // 결과값으로 받은 위치를 마커로 표시
+          const newMarker = new window.kakao.maps.Marker({
+            map: mapInstance,
+            position: coords,
+          });
+          setMarker(newMarker);
+
+          // 인포윈도우로 장소에 대한 설명 표시
+          const infowindow = new window.kakao.maps.InfoWindow({
+            content: `<div style="width:150px;text-align:center;padding:6px 0;">${data.weddingLocation}${data.venueHall ? ` ${data.venueHall}` : ""}</div>`,
+          });
+          infowindow.open(mapInstance, newMarker);
+
+          // 지도의 중심을 결과값으로 받은 위치로 이동
+          mapInstance.setCenter(coords);
+        } else {
+          alert("주소를 찾을 수 없습니다. 다시 확인해주세요.");
+        }
+      });
+    },
+    [data.weddingLocation, data.venueHall, map, marker]
+  );
 
   // 카카오맵 초기화
   useEffect(() => {
@@ -53,7 +95,7 @@ export default function WeddingVenueCard() {
     };
 
     loadKakaoMap();
-  }, [showMapPreview, data.venueOptions.lockMap]);
+  }, [showMapPreview, data.venueOptions.lockMap, data.weddingAddress, searchAddressToCoordinate]);
 
   // 지도 잠금 상태가 변경될 때 지도 설정 업데이트
   useEffect(() => {
@@ -62,45 +104,6 @@ export default function WeddingVenueCard() {
       map.setZoomable(!data.venueOptions.lockMap);
     }
   }, [data.venueOptions.lockMap, map]);
-
-  // 주소로 좌표 검색 및 마커 표시
-  const searchAddressToCoordinate = (address: string, mapInstance: any = map) => {
-    if (!mapInstance || !window.kakao) return;
-
-    // 주소-좌표 변환 객체 생성
-    const geocoder = new window.kakao.maps.services.Geocoder();
-
-    // 주소로 좌표를 검색
-    geocoder.addressSearch(address, (result: any, status: any) => {
-      if (status === window.kakao.maps.services.Status.OK) {
-        const coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
-        setCoordinates({ lat: parseFloat(result[0].y), lng: parseFloat(result[0].x) });
-
-        // 기존 마커 제거
-        if (marker) {
-          marker.setMap(null);
-        }
-
-        // 결과값으로 받은 위치를 마커로 표시
-        const newMarker = new window.kakao.maps.Marker({
-          map: mapInstance,
-          position: coords,
-        });
-        setMarker(newMarker);
-
-        // 인포윈도우로 장소에 대한 설명 표시
-        const infowindow = new window.kakao.maps.InfoWindow({
-          content: `<div style="width:150px;text-align:center;padding:6px 0;">${data.weddingLocation}${data.venueHall ? ` ${data.venueHall}` : ""}</div>`,
-        });
-        infowindow.open(mapInstance, newMarker);
-
-        // 지도의 중심을 결과값으로 받은 위치로 이동
-        mapInstance.setCenter(coords);
-      } else {
-        alert("주소를 찾을 수 없습니다. 다시 확인해주세요.");
-      }
-    });
-  };
 
   // 주소 검색 버튼 클릭 시 실행
   const searchAddress = () => {
@@ -114,7 +117,14 @@ export default function WeddingVenueCard() {
     if (showMapPreview && map && data.weddingAddress) {
       searchAddressToCoordinate(data.weddingAddress);
     }
-  }, [data.weddingAddress, data.weddingLocation, data.venueHall, showMapPreview, map]);
+  }, [
+    data.weddingAddress,
+    data.weddingLocation,
+    data.venueHall,
+    showMapPreview,
+    map,
+    searchAddressToCoordinate,
+  ]);
 
   return (
     <CustomizationCard title="예식 장소">

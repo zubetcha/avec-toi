@@ -29,7 +29,7 @@ export default function KakaoShareCard() {
   };
 
   // 이 부분은 서버에 실제로 업로드하지 않고 클라이언트에서 미리보기를 보여주기 위한 임시 처리입니다
-  const customRequest = ({ file, onSuccess }: any) => {
+  const customRequest = ({ onSuccess }: any) => {
     setTimeout(() => {
       onSuccess("ok");
     }, 1000);
@@ -77,10 +77,12 @@ export default function KakaoShareCard() {
           {/* 현재 썸네일 미리보기 */}
           {data.kakaoShareThumbnail && (
             <div className="mb-3 overflow-hidden rounded-md border border-gray-200">
-              <img
+              <Image
                 src={data.kakaoShareThumbnail}
                 alt="썸네일 미리보기"
                 className="h-32 w-full object-cover"
+                width={800}
+                height={400}
               />
             </div>
           )}

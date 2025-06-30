@@ -5,22 +5,21 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 interface LoginModalProps {
   isOpen: boolean;
-  onClose: () => void;
-  onLoginSuccess: () => void;
+  onCloseAction: () => void;
 }
 
-export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginModalProps) {
+export default function LoginModal({ isOpen, onCloseAction }: LoginModalProps) {
   const supabase = useSupabaseClient();
 
   const handleModalClose = () => {
-    onClose();
+    onCloseAction();
   };
 
   const handleKakaoLogin = async () => {
     try {
       message.loading({ content: "카카오 로그인 중...", key: "kakao-login" });
 
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: "kakao",
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
