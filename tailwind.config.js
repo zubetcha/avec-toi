@@ -44,6 +44,7 @@ module.exports = {
       },
       fontFamily: {
         suit: ["var(--font-suit)"],
+        pretendard: ["Pretendard Variable", "sans-serif"],
       },
     },
   },

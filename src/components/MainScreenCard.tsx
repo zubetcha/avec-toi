@@ -76,6 +76,8 @@ export default function MainScreenCard() {
                     src={image}
                     alt={`프리셋 이미지 ${index + 1}`}
                     className="h-full w-full object-cover"
+                    width={100}
+                    height={100}
                   />
                 </Button>
               ))}

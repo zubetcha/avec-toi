@@ -3,6 +3,7 @@
 import React from "react";
 import { useInvitationStore } from "../stores/invitation-store";
 import Image from "next/image";
+
 export default function InvitationPreview() {
   const { data } = useInvitationStore();
 
@@ -37,6 +38,12 @@ export default function InvitationPreview() {
     ? `${data.weddingLocation} ${data.venueHall}`
     : data.weddingLocation;
 
+  // 부모님 이름 표시 (고인 처리 포함)
+  const getParentName = (name: string, isDeceased: boolean) => {
+    if (!name) return "";
+    return isDeceased && data.options.showDeceasedWithFlower ? `🌹 ${name}` : name;
+  };
+
   return (
     <div className="flex h-full w-full flex-col overflow-hidden rounded-2xl bg-white shadow-[0_4px_16px_0px_rgba(17,17,26,0.03),0_8px_32px_0px_rgba(17,17,26,0.03)]">
       <div className="border-b border-gray-100 bg-white p-4">
@@ -59,7 +66,13 @@ export default function InvitationPreview() {
         {/* 메인 이미지 영역 */}
         <div className="flex h-40 items-center justify-center bg-gray-100">
           {data.mainImage ? (
-            <Image src={data.mainImage} alt="메인 이미지" className="h-full w-full object-cover" />
+            <Image
+              src={data.mainImage}
+              alt="메인 이미지"
+              width={400}
+              height={160}
+              className="h-full w-full object-cover"
+            />
           ) : (
             <span className="text-gray-500">템플릿 {data.selectedThemeId}</span>
           )}
@@ -67,7 +80,12 @@ export default function InvitationPreview() {
 
         <div className="space-y-4 p-6">
           {/* 제목 */}
-          <h2 className="text-center text-xl font-medium">{displayTitle}</h2>
+          <h2
+            className="text-center text-xl font-medium"
+            style={{ color: data.theme.selectedColor }}
+          >
+            {displayTitle}
+          </h2>
 
           {/* 날짜 및 장소 */}
           <div className="space-y-1 text-center">
@@ -77,25 +95,113 @@ export default function InvitationPreview() {
               </p>
             )}
             {displayVenue && <p className="text-sm text-gray-700">{displayVenue}</p>}
+            {data.weddingAddress && <p className="text-xs text-gray-500">{data.weddingAddress}</p>}
           </div>
 
           {/* 신랑신부 정보 */}
           {(groomFullName || brideFullName) && (
             <div className="flex items-center justify-center gap-6 py-4">
-              {groomFullName && (
-                <div className="text-center">
-                  <p className="font-medium">{groomFullName}</p>
-                  <p className="text-xs text-gray-500">신랑</p>
-                </div>
-              )}
-
-              {groomFullName && brideFullName && <div className="text-2xl text-gray-300">&</div>}
-
-              {brideFullName && (
-                <div className="text-center">
-                  <p className="font-medium">{brideFullName}</p>
-                  <p className="text-xs text-gray-500">신부</p>
-                </div>
+              {/* 신부 우선 표시 옵션 처리 */}
+              {data.options.showBrideFirst ? (
+                <>
+                  {brideFullName && (
+                    <div className="text-center">
+                      <p className="font-medium">{brideFullName}</p>
+                      <p className="text-xs text-gray-500">신부</p>
+                      {(data.brideInfo.fatherName || data.brideInfo.motherName) && (
+                        <div className="mt-1 text-xs text-gray-400">
+                          {getParentName(
+                            data.brideInfo.fatherName,
+                            data.brideInfo.isFatherDeceased
+                          )}
+                          {data.brideInfo.fatherName && data.brideInfo.motherName && " · "}
+                          {getParentName(
+                            data.brideInfo.motherName,
+                            data.brideInfo.isMotherDeceased
+                          )}
+                          <span className="ml-1">
+                            의 {data.brideInfo.isChild === "son" ? "아들" : "딸"}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {groomFullName && brideFullName && (
+                    <div className="text-2xl text-gray-300">&</div>
+                  )}
+                  {groomFullName && (
+                    <div className="text-center">
+                      <p className="font-medium">{groomFullName}</p>
+                      <p className="text-xs text-gray-500">신랑</p>
+                      {(data.groomInfo.fatherName || data.groomInfo.motherName) && (
+                        <div className="mt-1 text-xs text-gray-400">
+                          {getParentName(
+                            data.groomInfo.fatherName,
+                            data.groomInfo.isFatherDeceased
+                          )}
+                          {data.groomInfo.fatherName && data.groomInfo.motherName && " · "}
+                          {getParentName(
+                            data.groomInfo.motherName,
+                            data.groomInfo.isMotherDeceased
+                          )}
+                          <span className="ml-1">
+                            의 {data.groomInfo.isChild === "son" ? "아들" : "딸"}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  {groomFullName && (
+                    <div className="text-center">
+                      <p className="font-medium">{groomFullName}</p>
+                      <p className="text-xs text-gray-500">신랑</p>
+                      {(data.groomInfo.fatherName || data.groomInfo.motherName) && (
+                        <div className="mt-1 text-xs text-gray-400">
+                          {getParentName(
+                            data.groomInfo.fatherName,
+                            data.groomInfo.isFatherDeceased
+                          )}
+                          {data.groomInfo.fatherName && data.groomInfo.motherName && " · "}
+                          {getParentName(
+                            data.groomInfo.motherName,
+                            data.groomInfo.isMotherDeceased
+                          )}
+                          <span className="ml-1">
+                            의 {data.groomInfo.isChild === "son" ? "아들" : "딸"}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {groomFullName && brideFullName && (
+                    <div className="text-2xl text-gray-300">&</div>
+                  )}
+                  {brideFullName && (
+                    <div className="text-center">
+                      <p className="font-medium">{brideFullName}</p>
+                      <p className="text-xs text-gray-500">신부</p>
+                      {(data.brideInfo.fatherName || data.brideInfo.motherName) && (
+                        <div className="mt-1 text-xs text-gray-400">
+                          {getParentName(
+                            data.brideInfo.fatherName,
+                            data.brideInfo.isFatherDeceased
+                          )}
+                          {data.brideInfo.fatherName && data.brideInfo.motherName && " · "}
+                          {getParentName(
+                            data.brideInfo.motherName,
+                            data.brideInfo.isMotherDeceased
+                          )}
+                          <span className="ml-1">
+                            의 {data.brideInfo.isChild === "son" ? "아들" : "딸"}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </>
               )}
             </div>
           )}
@@ -113,12 +219,22 @@ export default function InvitationPreview() {
           {data.galleryImages.length > 0 && (
             <div className="space-y-2">
               <p className="text-sm font-medium text-gray-700">갤러리</p>
-              <div className="grid grid-cols-3 gap-1">
+              <div
+                className={`grid gap-1 ${
+                  data.galleryDisplayMode === "그리드"
+                    ? "grid-cols-3"
+                    : data.galleryDisplayMode === "모자이크"
+                      ? "grid-cols-2"
+                      : "grid-cols-1"
+                }`}
+              >
                 {data.galleryImages.slice(0, 6).map((image, index) => (
                   <div key={image.id} className="aspect-square overflow-hidden rounded bg-gray-100">
                     <Image
                       src={image.url}
                       alt={image.caption || `갤러리 이미지 ${index + 1}`}
+                      width={120}
+                      height={120}
                       className="h-full w-full object-cover"
                     />
                   </div>
@@ -132,6 +248,38 @@ export default function InvitationPreview() {
             </div>
           )}
 
+          {/* 비디오 미리보기 */}
+          {data.video && (
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-gray-700">동영상</p>
+              <div className="rounded bg-gray-100 p-4 text-center">
+                <p className="text-sm text-gray-600">
+                  {data.video.type === "youtube" ? "YouTube" : "커스텀"} 영상
+                </p>
+                {data.video.title && (
+                  <p className="mt-1 text-xs text-gray-500">{data.video.title}</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* 교통편 정보 */}
+          {data.transportations.some((t) => t.enabled && t.description) && (
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-gray-700">오시는 길</p>
+              <div className="space-y-1">
+                {data.transportations
+                  .filter((t) => t.enabled && t.description)
+                  .map((transport, index) => (
+                    <div key={index} className="text-xs">
+                      <span className="font-medium">{transport.type}:</span>
+                      <span className="ml-1 text-gray-600">{transport.description}</span>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
+
           {/* 연락처 미리보기 */}
           {(data.contacts.groom.name || data.contacts.bride.name) && (
             <div className="space-y-2">
@@ -141,14 +289,79 @@ export default function InvitationPreview() {
                   <div className="rounded bg-gray-50 p-2 text-center">
                     <p className="font-medium">신랑측</p>
                     <p>{data.contacts.groom.name}</p>
+                    {data.contacts.groom.phoneNumber && (
+                      <p className="text-gray-500">{data.contacts.groom.phoneNumber}</p>
+                    )}
                   </div>
                 )}
                 {data.contacts.bride.name && (
                   <div className="rounded bg-gray-50 p-2 text-center">
                     <p className="font-medium">신부측</p>
                     <p>{data.contacts.bride.name}</p>
+                    {data.contacts.bride.phoneNumber && (
+                      <p className="text-gray-500">{data.contacts.bride.phoneNumber}</p>
+                    )}
                   </div>
                 )}
+              </div>
+            </div>
+          )}
+
+          {/* 계좌 정보 */}
+          {data.showBankAccounts && data.bankAccounts.length > 0 && (
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-gray-700">마음 전하실 곳</p>
+              <div className="space-y-1">
+                {data.bankAccounts.map((account) => (
+                  <div key={account.id} className="rounded bg-gray-50 p-2 text-xs">
+                    <p className="font-medium">{account.relationship}</p>
+                    <p>
+                      {account.bankName} {account.accountNumber}
+                    </p>
+                    <p className="text-gray-500">{account.accountHolder}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 선택된 음악 */}
+          {data.selectedSong && (
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-gray-700">배경음악</p>
+              <div className="rounded bg-gray-50 p-2 text-xs">
+                <p className="font-medium">{data.selectedSong.title}</p>
+                <p className="text-gray-500">{data.selectedSong.artist}</p>
+                {data.autoPlay && <p className="mt-1 text-xs text-blue-500">자동재생</p>}
+              </div>
+            </div>
+          )}
+
+          {/* 방명록 설정 */}
+          {data.guestbookEnabled && (
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-gray-700">방명록</p>
+              <div className="rounded bg-gray-50 p-2 text-center text-xs">
+                <p>방명록이 활성화되어 있습니다</p>
+                {data.guestbookRequirePassword && (
+                  <p className="mt-1 text-gray-500">비밀번호 필요</p>
+                )}
+                {data.guestbookModerationEnabled && (
+                  <p className="mt-1 text-gray-500">관리자 승인 필요</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* 화환 주문 */}
+          {data.flowerEnabled && data.selectedFlowerVendors.length > 0 && (
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-gray-700">화환 주문</p>
+              <div className="rounded bg-gray-50 p-2 text-center text-xs">
+                <p>화환 주문이 가능합니다</p>
+                <p className="mt-1 text-gray-500">
+                  {data.selectedFlowerVendors.length}개 업체 연결
+                </p>
               </div>
             </div>
           )}
@@ -159,7 +372,13 @@ export default function InvitationPreview() {
               {data.endingMessage.split("\n").map((line, index) => (
                 <p key={index}>{line}</p>
               ))}
+              <p className="mt-2 text-xs text-gray-400">효과: {data.endingMessageEffect}</p>
             </div>
+          )}
+
+          {/* 커스텀 URL */}
+          {data.customUrl && (
+            <div className="pt-2 text-center text-xs text-gray-500">URL: {data.customUrl}</div>
           )}
         </div>
       </div>

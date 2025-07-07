@@ -46,7 +46,7 @@ export default function ThemeCard() {
     { id: "Nanum Myeongjo", name: "나눔 명조", sample: "가나다라마바사 ABC" },
     { id: "Gowun Dodum", name: "고운 도담", sample: "가나다라마바사 ABC" },
     { id: "Gowun Batang", name: "고운 바탕", sample: "가나다라마바사 ABC" },
-    { id: "Gaegu", name: "개구", sample: "가나다라마바사 ABC" },
+    { id: "Pretendard", name: "프리텐다드", sample: "가나다라마바사 ABC" },
   ];
 
   const predefinedColors = [
@@ -199,9 +199,8 @@ export default function ThemeCard() {
                 type={data.theme.selectedFont === font.id ? "primary" : "default"}
                 className="flex h-auto flex-col items-center justify-center p-2 text-center"
               >
-                <span className="mb-1 block text-xs font-medium">{font.name}</span>
-                <span className="text-xs text-gray-500" style={{ fontFamily: font.id }}>
-                  가나다
+                <span className={`mb-1 block text-xs font-medium font-${font.id}`}>
+                  {font.name}
                 </span>
               </Button>
             ))}
