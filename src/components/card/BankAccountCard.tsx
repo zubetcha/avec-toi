@@ -4,7 +4,7 @@ import React, { useCallback } from "react";
 import CustomizationCard from "./CustomizationCard";
 import { Input, Select, Switch, Button, Card, Space, Typography, Row } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
-import { useInvitationStore } from "../stores/invitation-store";
+import { useInvitationStore } from "@/stores/invitation-store";
 
 const { Text } = Typography;
 const { Option } = Select;

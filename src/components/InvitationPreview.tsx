@@ -45,13 +45,9 @@ export default function InvitationPreview() {
   };
 
   return (
-    <div className="flex h-full w-full flex-col overflow-hidden rounded-2xl bg-white shadow-[0_4px_16px_0px_rgba(17,17,26,0.03),0_8px_32px_0px_rgba(17,17,26,0.03)]">
-      <div className="border-b border-gray-100 bg-white p-4">
-        <h3 className="text-sm font-medium text-gray-700">미리보기</h3>
-      </div>
-
+    <div className="flex h-full w-full flex-col overflow-hidden rounded-md bg-white shadow-[0_4px_16px_0px_rgba(17,17,26,0.03),0_8px_32px_0px_rgba(17,17,26,0.03)]">
       <div
-        className="flex-1 overflow-auto"
+        className="scrollbar-hide flex-1 overflow-auto"
         style={{
           backgroundColor: data.backgroundColor,
           fontFamily: data.theme.selectedFont,
@@ -61,16 +57,24 @@ export default function InvitationPreview() {
               : data.theme.selectedFontSize === "large"
                 ? "18px"
                 : "16px",
+          WebkitOverflowScrolling: "touch",
+          msOverflowStyle: "none",
+          scrollbarWidth: "none",
         }}
       >
+        <style jsx>{`
+          div::-webkit-scrollbar {
+            display: none;
+          }
+        `}</style>
         {/* 메인 이미지 영역 */}
-        <div className="flex h-40 items-center justify-center bg-gray-100">
+        <div className="flex h-full w-full items-center justify-center bg-gray-100">
           {data.mainImage ? (
             <Image
               src={data.mainImage}
               alt="메인 이미지"
-              width={400}
-              height={160}
+              width={100}
+              height={100}
               className="h-full w-full object-cover"
             />
           ) : (

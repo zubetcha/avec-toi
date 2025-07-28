@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Input, Button, message } from "antd";
 import { EditOutlined, CopyOutlined, DownloadOutlined } from "@ant-design/icons";
 import CustomizationCard from "./CustomizationCard";
-import { useInvitationStore } from "../stores/invitation-store";
+import { useInvitationStore } from "@/stores/invitation-store";
 
 export default function UrlShareCard() {
   const { data, setField } = useInvitationStore();

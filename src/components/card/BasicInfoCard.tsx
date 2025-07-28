@@ -3,7 +3,7 @@
 import CustomizationCard from "./CustomizationCard";
 import { Select, Input, Checkbox } from "antd";
 import "antd/dist/reset.css";
-import { useInvitationStore } from "../stores/invitation-store";
+import { useInvitationStore } from "@/stores/invitation-store";
 
 // Select 컴포넌트 스타일 커스터마이징
 const selectStyles = {

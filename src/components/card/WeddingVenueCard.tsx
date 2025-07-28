@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import CustomizationCard from "./CustomizationCard";
 import { Input, Button, Checkbox, Row, Col } from "antd";
 import { SearchOutlined, PhoneOutlined } from "@ant-design/icons";
-import { useInvitationStore } from "../stores/invitation-store";
+import { useInvitationStore } from "@/stores/invitation-store";
 
 declare global {
   interface Window {

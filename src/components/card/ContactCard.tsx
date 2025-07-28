@@ -3,7 +3,7 @@
 import CustomizationCard from "./CustomizationCard";
 import { Input, Checkbox, Divider, Row, Col } from "antd";
 import { PhoneOutlined } from "@ant-design/icons";
-import { useInvitationStore } from "../stores/invitation-store";
+import { useInvitationStore } from "@/stores/invitation-store";
 
 export default function ContactCard() {
   const { data, setField } = useInvitationStore();

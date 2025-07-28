@@ -1,21 +1,20 @@
+import ThemeCard from "@/components/card/ThemeCard";
+import BasicInfoCard from "@/components/card/BasicInfoCard";
+import GreetingCard from "@/components/card/GreetingCard";
+import WeddingDateCard from "@/components/card/WeddingDateCard";
+import WeddingVenueCard from "@/components/card/WeddingVenueCard";
+import TransportationCard from "@/components/card/TransportationCard";
+import GalleryCard from "@/components/card/GalleryCard";
+import EndingCard from "@/components/card/EndingCard";
+import ContactCard from "@/components/card/ContactCard";
+import BankAccountCard from "@/components/card/BankAccountCard";
+import BackgroundMusicCard from "@/components/card/BackgroundMusicCard";
+import GuestbookCard from "@/components/card/GuestbookCard";
+import VideoCard from "@/components/card/VideoCard";
+import FlowerCard from "@/components/card/FlowerCard";
+import KakaoShareCard from "@/components/card/KakaoShareCard";
+import UrlShareCard from "@/components/card/UrlShareCard";
 import InvitationPreview from "@/components/InvitationPreview";
-import ThemeCard from "@/components/ThemeCard";
-import BasicInfoCard from "@/components/BasicInfoCard";
-import MainScreenCard from "@/components/MainScreenCard";
-import GreetingCard from "@/components/GreetingCard";
-import WeddingDateCard from "@/components/WeddingDateCard";
-import WeddingVenueCard from "@/components/WeddingVenueCard";
-import TransportationCard from "@/components/TransportationCard";
-import GalleryCard from "@/components/GalleryCard";
-import EndingCard from "@/components/EndingCard";
-import ContactCard from "@/components/ContactCard";
-import BankAccountCard from "@/components/BankAccountCard";
-import BackgroundMusicCard from "@/components/BackgroundMusicCard";
-import GuestbookCard from "@/components/GuestbookCard";
-import VideoCard from "@/components/VideoCard";
-import FlowerCard from "@/components/FlowerCard";
-import KakaoShareCard from "@/components/KakaoShareCard";
-import UrlShareCard from "@/components/UrlShareCard";
 
 export default function CreatePage() {
   return (
@@ -26,10 +25,9 @@ export default function CreatePage() {
           <InvitationPreview />
         </div>
         {/* 커스터마이징 영역 */}
-        <div className="w-full space-y-6">
+        <div className="w-full">
           <ThemeCard />
           <BasicInfoCard />
-          <MainScreenCard />
           <GreetingCard />
           <WeddingDateCard />
           <WeddingVenueCard />
@@ -43,6 +41,7 @@ export default function CreatePage() {
           <VideoCard />
           <FlowerCard />
           <KakaoShareCard />
+
           <UrlShareCard />
         </div>
       </div>

@@ -6,7 +6,7 @@ import { DatePicker, TimePicker } from "antd";
 import dayjs from "dayjs";
 import type { Dayjs } from "dayjs";
 import locale from "antd/lib/date-picker/locale/ko_KR";
-import { useInvitationStore } from "../stores/invitation-store";
+import { useInvitationStore } from "@/stores/invitation-store";
 
 export default function WeddingDateCard() {
   const { data, setField } = useInvitationStore();

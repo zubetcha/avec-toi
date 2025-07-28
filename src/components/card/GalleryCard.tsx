@@ -4,7 +4,7 @@ import { Button, Input, Upload, message } from "antd";
 import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
 import CustomizationCard from "./CustomizationCard";
-import { useInvitationStore } from "../stores/invitation-store";
+import { useInvitationStore } from "@/stores/invitation-store";
 import Image from "next/image";
 interface GalleryImage {
   id: string;

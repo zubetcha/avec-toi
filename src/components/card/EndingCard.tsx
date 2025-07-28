@@ -2,7 +2,7 @@
 
 import CustomizationCard from "./CustomizationCard";
 import { Input, Radio, Space } from "antd";
-import { useInvitationStore } from "../stores/invitation-store";
+import { useInvitationStore } from "@/stores/invitation-store";
 
 const { TextArea } = Input;
 

@@ -3,7 +3,7 @@
 import { Input, Switch, Button } from "antd";
 import { SendOutlined } from "@ant-design/icons";
 import CustomizationCard from "./CustomizationCard";
-import { useInvitationStore } from "../stores/invitation-store";
+import { useInvitationStore } from "@/stores/invitation-store";
 
 const { TextArea } = Input;
 

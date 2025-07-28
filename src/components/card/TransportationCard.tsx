@@ -3,7 +3,7 @@
 import CustomizationCard from "./CustomizationCard";
 import { Input, Checkbox, Button, message } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
-import { useInvitationStore } from "../stores/invitation-store";
+import { useInvitationStore } from "@/stores/invitation-store";
 
 const { TextArea } = Input;
 

@@ -5,7 +5,7 @@ import { Input, Button, Upload, Divider } from "antd";
 import { UploadOutlined, CloseOutlined, VideoCameraOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
 import CustomizationCard from "./CustomizationCard";
-import { useInvitationStore } from "../stores/invitation-store";
+import { useInvitationStore } from "@/stores/invitation-store";
 
 interface VideoInfo {
   type: "youtube" | "custom";

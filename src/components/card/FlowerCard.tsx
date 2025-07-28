@@ -3,7 +3,7 @@
 import { Checkbox, Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import CustomizationCard from "./CustomizationCard";
-import { useInvitationStore } from "../stores/invitation-store";
+import { useInvitationStore } from "@/stores/invitation-store";
 
 interface FlowerVendor {
   id: string;

@@ -5,7 +5,7 @@ import Image from "next/image";
 import CustomizationCard from "./CustomizationCard";
 import { Input, Typography, Upload, Button } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { useInvitationStore } from "../stores/invitation-store";
+import { useInvitationStore } from "@/stores/invitation-store";
 
 const { Text } = Typography;
 const { TextArea } = Input;

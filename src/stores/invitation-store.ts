@@ -3,6 +3,8 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
+const defaultImage = "https://i.pinimg.com/1200x/58/e7/23/58e7238d5e956a1961e7ca5e03be3729.jpg";
+
 interface TransportInfo {
   type: string;
   description: string;
@@ -229,7 +231,7 @@ const defaultFormData: FormData = {
   message: "",
   endingMessage: "",
   endingMessageEffect: "페이드인",
-  mainImage: "",
+  mainImage: defaultImage,
   galleryImages: [],
   galleryDisplayMode: "그리드",
   transportations: [

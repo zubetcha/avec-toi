@@ -5,7 +5,7 @@ import { Input, Button, Switch, Upload } from "antd";
 import { UploadOutlined, SearchOutlined, CloseOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
 import CustomizationCard from "./CustomizationCard";
-import { useInvitationStore } from "../stores/invitation-store";
+import { useInvitationStore } from "@/stores/invitation-store";
 
 interface Song {
   id: string;

@@ -2,7 +2,7 @@
 
 import CustomizationCard from "./CustomizationCard";
 import { Input, Button } from "antd";
-import { useInvitationStore } from "../stores/invitation-store";
+import { useInvitationStore } from "@/stores/invitation-store";
 
 // Input 컴포넌트 스타일 커스터마이징
 const inputStyles = {
