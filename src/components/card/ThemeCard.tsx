@@ -100,17 +100,6 @@ export default function ThemeCard() {
     return false; // prevent upload
   };
 
-  const presetImages = [
-    "/images/preset1.jpg",
-    "/images/preset2.jpg",
-    "/images/preset3.jpg",
-    "/images/preset4.jpg",
-  ];
-
-  const handlePresetSelect = (imageUrl: string) => {
-    setField("mainImage", imageUrl);
-  };
-
   return (
     <CustomizationCard title="테마 설정">
       <div className="space-y-6">
@@ -156,33 +145,6 @@ export default function ThemeCard() {
                 내 이미지 업로드
               </Button>
             </Upload>
-
-            {/* 프리셋 이미지 선택 */}
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-gray-700">프리셋 이미지</p>
-              <div className="grid grid-cols-2 gap-2">
-                {presetImages.map((image, index) => (
-                  <Button
-                    key={index}
-                    onClick={() => handlePresetSelect(image)}
-                    type={data.mainImage === image ? "primary" : "default"}
-                    className="h-20 overflow-hidden p-0"
-                    style={{
-                      border:
-                        data.mainImage === image ? "2px solid #f43f5e" : "2px solid transparent",
-                    }}
-                  >
-                    <Image
-                      src={image}
-                      alt={`프리셋 이미지 ${index + 1}`}
-                      className="h-full w-full object-cover"
-                      width={100}
-                      height={100}
-                    />
-                  </Button>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
 
