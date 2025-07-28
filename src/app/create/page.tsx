@@ -21,7 +21,11 @@ export default function CreatePage() {
   return (
     <div className="flex min-h-screen flex-col items-center gap-6">
       <div className="flex w-full max-w-6xl justify-between gap-8 p-8">
-        {/* 왼쪽 커스터마이징 영역 */}
+        {/* 미리보기 영역 */}
+        <div className="sticky top-24 h-[calc(100vh-10rem)] w-180">
+          <InvitationPreview />
+        </div>
+        {/* 커스터마이징 영역 */}
         <div className="w-full space-y-6">
           <ThemeCard />
           <BasicInfoCard />
@@ -40,11 +44,6 @@ export default function CreatePage() {
           <FlowerCard />
           <KakaoShareCard />
           <UrlShareCard />
-        </div>
-
-        {/* 미리보기 영역 */}
-        <div className="sticky top-24 h-[calc(100vh-14rem)] w-160">
-          <InvitationPreview />
         </div>
       </div>
     </div>

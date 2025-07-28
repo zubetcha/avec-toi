@@ -2,19 +2,12 @@
 
 import { useState } from "react";
 import CustomizationCard from "./CustomizationCard";
-import { Button, Input, Switch } from "antd";
+import { Button, ColorPicker, Select } from "antd";
 import { useInvitationStore } from "../stores/invitation-store";
-
-interface ThemeOptions {
-  useAnimation: boolean;
-  useParallaxEffect: boolean;
-  useAutoScroll: boolean;
-  useHighContrast: boolean;
-}
+import React from "react";
 
 export default function ThemeCard() {
   const { data, setField, setNested } = useInvitationStore();
-  const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
 
   const themes = [
     { id: 1, name: "클래식", color: "bg-rose-100" },
@@ -50,6 +43,7 @@ export default function ThemeCard() {
   ];
 
   const predefinedColors = [
+    "#FFFFFF", // 흰색
     "#FFF5F5", // 연한 분홍
     "#F3F4F6", // 연한 회색
     "#EFF6FF", // 연한 파랑
@@ -74,6 +68,13 @@ export default function ThemeCard() {
     setField("backgroundColor", color);
   };
 
+  // 컴포넌트가 마운트될 때 기본 배경색 설정
+  React.useEffect(() => {
+    if (!data.backgroundColor) {
+      handleBackgroundColorChange("#FFFFFF");
+    }
+  }, []);
+
   const handleBackgroundPatternChange = (pattern: string) => {
     setField("backgroundPattern", pattern);
   };
@@ -90,29 +91,21 @@ export default function ThemeCard() {
     setNested("theme", "selectedFontSize", fontSize);
   };
 
-  const handleOptionChange = (option: keyof ThemeOptions) => {
-    setNested("theme", option, !data.theme[option]);
-  };
-
   return (
     <CustomizationCard title="테마 설정">
       <div className="space-y-6">
         {/* 테마 선택 */}
         <div className="space-y-2">
           <p className="text-sm font-medium text-gray-700">테마 선택</p>
-          <div className="grid grid-cols-2 gap-3">
-            {themes.map((theme) => (
-              <Button
-                key={theme.id}
-                onClick={() => handleThemeSelect(theme.id)}
-                type={data.selectedThemeId === theme.id ? "primary" : "default"}
-                className={`flex h-20 items-center justify-center rounded-lg p-4 ${theme.color}`}
-                block
-              >
-                <span className="font-medium">{theme.name}</span>
-              </Button>
-            ))}
-          </div>
+          <Select
+            value={data.selectedThemeId}
+            onChange={handleThemeSelect}
+            className="w-64"
+            options={themes.map((theme) => ({
+              value: theme.id,
+              label: theme.name,
+            }))}
+          />
         </div>
 
         {/* 배경 색상 선택 */}
@@ -132,79 +125,65 @@ export default function ThemeCard() {
                   style={{ backgroundColor: color, minWidth: "32px" }}
                 />
               ))}
-              <Button
-                onClick={() => setIsColorPickerOpen(!isColorPickerOpen)}
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 bg-white text-xs"
-                style={{ minWidth: "32px" }}
-              >
-                +
-              </Button>
+              <ColorPicker
+                value={data.backgroundColor}
+                onChange={(color) => handleBackgroundColorChange(color.toHexString())}
+                className="!h-8 !w-8"
+                presets={[
+                  {
+                    label: "추천 색상",
+                    colors: predefinedColors,
+                  },
+                ]}
+              />
             </div>
-
-            {isColorPickerOpen && (
-              <div className="mt-2 rounded-md border border-gray-200 bg-white p-2 shadow-md">
-                <Input
-                  type="color"
-                  value={data.backgroundColor}
-                  onChange={(e) => handleBackgroundColorChange(e.target.value)}
-                  className="h-8 w-full cursor-pointer rounded border-0"
-                />
-              </div>
-            )}
           </div>
         </div>
 
         {/* 배경 패턴 선택 */}
         <div className="space-y-2">
           <p className="text-sm font-medium text-gray-700">배경 패턴</p>
-          <div className="flex flex-wrap gap-2">
-            {backgroundPatterns.map((pattern) => (
-              <Button
-                key={pattern.id}
-                onClick={() => handleBackgroundPatternChange(pattern.id)}
-                type={data.backgroundPattern === pattern.id ? "primary" : "default"}
-                size="small"
-              >
-                {pattern.name}
-              </Button>
-            ))}
-          </div>
+          <Select
+            value={data.backgroundPattern}
+            onChange={handleBackgroundPatternChange}
+            className="w-64"
+            options={backgroundPatterns.map((pattern) => ({
+              value: pattern.id,
+              label: pattern.name,
+            }))}
+          />
         </div>
 
         {/* 배경 이펙트 선택 */}
         <div className="space-y-2">
           <p className="text-sm font-medium text-gray-700">배경 이펙트</p>
-          <div className="flex flex-wrap gap-2">
-            {backgroundEffects.map((effect) => (
-              <Button
-                key={effect.id}
-                onClick={() => handleBackgroundEffectChange(effect.id)}
-                type={data.backgroundEffect === effect.id ? "primary" : "default"}
-                size="small"
-              >
-                {effect.name}
-              </Button>
-            ))}
-          </div>
+          <Select
+            value={data.backgroundEffect}
+            onChange={handleBackgroundEffectChange}
+            className="w-64"
+            options={backgroundEffects.map((effect) => ({
+              value: effect.id,
+              label: effect.name,
+            }))}
+          />
         </div>
 
         {/* 글꼴 선택 */}
         <div className="space-y-2">
           <p className="text-sm font-medium text-gray-700">글꼴 선택</p>
-          <div className="grid grid-cols-3 gap-2">
-            {fonts.map((font) => (
-              <Button
-                key={font.id}
-                onClick={() => handleFontChange(font.id)}
-                type={data.theme.selectedFont === font.id ? "primary" : "default"}
-                className="flex h-auto flex-col items-center justify-center p-2 text-center"
-              >
-                <span className={`mb-1 block text-xs font-medium font-${font.id}`}>
-                  {font.name}
+          <Select
+            value={data.theme.selectedFont}
+            onChange={handleFontChange}
+            className="w-64"
+            options={fonts.map((font) => ({
+              value: font.id,
+              label: (
+                <span className={`font-${font.id}`}>
+                  {font.name} - {font.sample}
                 </span>
-              </Button>
-            ))}
-          </div>
+              ),
+            }))}
+          />
         </div>
 
         {/* 글꼴 크기 선택 */}
@@ -227,60 +206,6 @@ export default function ThemeCard() {
                 </span>
               </Button>
             ))}
-          </div>
-        </div>
-
-        {/* 옵션 선택 */}
-        <div className="space-y-2">
-          <p className="text-sm font-medium text-gray-700">추가 옵션</p>
-          <div className="space-y-3 rounded-md border border-gray-200 bg-gray-50 p-3">
-            <div className="flex items-center justify-between">
-              <label htmlFor="animation-option" className="text-sm text-gray-700">
-                애니메이션 효과 사용
-              </label>
-              <Switch
-                id="animation-option"
-                checked={data.theme.useAnimation}
-                onChange={() => handleOptionChange("useAnimation")}
-                size="small"
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <label htmlFor="parallax-option" className="text-sm text-gray-700">
-                패럴랙스 스크롤 효과
-              </label>
-              <Switch
-                id="parallax-option"
-                checked={data.theme.useParallaxEffect}
-                onChange={() => handleOptionChange("useParallaxEffect")}
-                size="small"
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <label htmlFor="autoscroll-option" className="text-sm text-gray-700">
-                자동 스크롤 사용
-              </label>
-              <Switch
-                id="autoscroll-option"
-                checked={data.theme.useAutoScroll}
-                onChange={() => handleOptionChange("useAutoScroll")}
-                size="small"
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <label htmlFor="highcontrast-option" className="text-sm text-gray-700">
-                고대비 모드 사용
-              </label>
-              <Switch
-                id="highcontrast-option"
-                checked={data.theme.useHighContrast}
-                onChange={() => handleOptionChange("useHighContrast")}
-                size="small"
-              />
-            </div>
           </div>
         </div>
       </div>
