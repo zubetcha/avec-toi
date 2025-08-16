@@ -15,6 +15,7 @@ import FlowerCard from "@/components/card/FlowerCard";
 import KakaoShareCard from "@/components/card/KakaoShareCard";
 import UrlShareCard from "@/components/card/UrlShareCard";
 import InvitationPreview from "@/components/InvitationPreview";
+import MainCard from "@/components/card/MainCard";
 
 export default function CreatePage() {
   return (
@@ -27,6 +28,7 @@ export default function CreatePage() {
         {/* 커스터마이징 영역 */}
         <div className="w-full">
           <ThemeCard />
+          <MainCard />
           <BasicInfoCard />
           <GreetingCard />
           <WeddingDateCard />
