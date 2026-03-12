@@ -5,8 +5,10 @@ import CustomizationCard from "./CustomizationCard";
 import { DatePicker, TimePicker } from "antd";
 import dayjs from "dayjs";
 import type { Dayjs } from "dayjs";
-import locale from "antd/lib/date-picker/locale/ko_KR";
+import "dayjs/locale/ko";
 import { useInvitationStore } from "@/stores/invitation-store";
+
+dayjs.locale("ko");
 
 export default function WeddingDateCard() {
   const { data, setField } = useInvitationStore();
@@ -55,7 +57,6 @@ export default function WeddingDateCard() {
               value={selectedDate}
               onChange={handleDateChange}
               style={datePickerStyle}
-              locale={locale}
               placeholder="날짜 선택"
               format="YYYY년 MM월 DD일"
             />

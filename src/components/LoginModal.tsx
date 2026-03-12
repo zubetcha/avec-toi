@@ -1,7 +1,7 @@
 "use client";
 
 import { Modal, Button, message } from "antd";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useSupabase } from "@/app/_provider/supabase-provider";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -9,7 +9,7 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ isOpen, onCloseAction }: LoginModalProps) {
-  const supabase = useSupabaseClient();
+  const { supabase } = useSupabase();
 
   const handleModalClose = () => {
     onCloseAction();

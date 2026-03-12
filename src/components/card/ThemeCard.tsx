@@ -94,7 +94,7 @@ export default function ThemeCard() {
                   onClick={() => handleBackgroundColorChange(color)}
                   className={`h-8 w-8 rounded-full border p-0 ${
                     data.backgroundColor === color
-                      ? "border-rose-500 ring-2 ring-rose-300"
+                      ? "border-primary ring-2 ring-primary-200"
                       : "border-gray-300"
                   }`}
                   style={{ backgroundColor: color, minWidth: "32px" }}

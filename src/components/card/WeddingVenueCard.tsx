@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import CustomizationCard from "./CustomizationCard";
-import { Input, Button, Checkbox, Row, Col } from "antd";
-import { SearchOutlined, PhoneOutlined } from "@ant-design/icons";
+import { Input, Button, Checkbox, Row, Col, List } from "antd";
+import { SearchOutlined, PhoneOutlined, EnvironmentOutlined } from "@ant-design/icons";
 import { useInvitationStore } from "@/stores/invitation-store";
 
 declare global {
@@ -12,10 +12,23 @@ declare global {
   }
 }
 
+interface SearchResult {
+  id: string;
+  place_name: string;
+  address_name: string;
+  road_address_name: string;
+  phone: string;
+  x: string;
+  y: string;
+}
+
 export default function WeddingVenueCard() {
   const { data, setField, setNested } = useInvitationStore();
 
   const [showMapPreview, setShowMapPreview] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<any>(null);
   const [marker, setMarker] = useState<any>(null);
@@ -112,6 +125,48 @@ export default function WeddingVenueCard() {
     }
   };
 
+  // 키워드로 장소 검색
+  const searchByKeyword = useCallback(() => {
+    if (!searchKeyword.trim() || !window.kakao) return;
+
+    setIsSearching(true);
+    setSearchResults([]);
+
+    const loadAndSearch = () => {
+      const ps = new window.kakao.maps.services.Places();
+
+      ps.keywordSearch(searchKeyword, (results: SearchResult[], status: any) => {
+        setIsSearching(false);
+        if (status === window.kakao.maps.services.Status.OK) {
+          setSearchResults(results.slice(0, 5));
+        } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
+          setSearchResults([]);
+        }
+      });
+    };
+
+    if (window.kakao.maps.services) {
+      loadAndSearch();
+    } else {
+      window.kakao.maps.load(() => {
+        loadAndSearch();
+      });
+    }
+  }, [searchKeyword]);
+
+  // 검색 결과 선택
+  const selectPlace = (place: SearchResult) => {
+    setField("weddingLocation", place.place_name);
+    setField("weddingAddress", place.road_address_name || place.address_name);
+    if (place.phone) {
+      setField("venuePhone", place.phone);
+    }
+    setCoordinates({ lat: parseFloat(place.y), lng: parseFloat(place.x) });
+    setSearchResults([]);
+    setSearchKeyword("");
+    setShowMapPreview(true);
+  };
+
   // 주소 변경 시 지도 업데이트
   useEffect(() => {
     if (showMapPreview && map && data.weddingAddress) {
@@ -130,6 +185,56 @@ export default function WeddingVenueCard() {
     <CustomizationCard title="예식 장소">
       <div className="space-y-4">
         <p className="text-sm text-gray-600">예식이 진행될 장소 정보를 입력하세요.</p>
+
+        {/* 예식장 키워드 검색 */}
+        <div className="rounded-lg border border-gray-200 bg-gray-50 p-3">
+          <label className="mb-2 block text-sm font-medium text-gray-700">
+            <EnvironmentOutlined className="mr-1" />
+            예식장 검색
+          </label>
+          <div className="flex gap-2">
+            <Input
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+              onPressEnter={searchByKeyword}
+              placeholder="예식장 이름으로 검색 (예: 더채플앳청담)"
+              size="middle"
+            />
+            <Button
+              icon={<SearchOutlined />}
+              onClick={searchByKeyword}
+              type="primary"
+              loading={isSearching}
+            >
+              검색
+            </Button>
+          </div>
+
+          {/* 검색 결과 목록 */}
+          {searchResults.length > 0 && (
+            <List
+              className="mt-2 max-h-48 overflow-y-auto rounded border border-gray-200 bg-white"
+              size="small"
+              dataSource={searchResults}
+              renderItem={(place) => (
+                <List.Item
+                  className="cursor-pointer hover:bg-primary-50"
+                  onClick={() => selectPlace(place)}
+                >
+                  <div className="w-full px-2">
+                    <p className="font-medium text-gray-800">{place.place_name}</p>
+                    <p className="text-xs text-gray-500">
+                      {place.road_address_name || place.address_name}
+                    </p>
+                    {place.phone && (
+                      <p className="text-xs text-gray-400">{place.phone}</p>
+                    )}
+                  </div>
+                </List.Item>
+              )}
+            />
+          )}
+        </div>
 
         <div>
           <label className="mb-1 block text-sm font-medium text-gray-700">제목</label>

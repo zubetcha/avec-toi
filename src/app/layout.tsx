@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ConfigProvider } from "antd";
+import koKR from "antd/locale/ko_KR";
 import localFont from "next/font/local";
 import "./globals.css";
 import Script from "next/script";
@@ -39,9 +40,36 @@ export default function RootLayout({
       </head>
       <body className={`${suit.variable} bg-slate-50`}>
         <ConfigProvider
+          locale={koKR}
           theme={{
             token: {
-              colorPrimary: "#7c86ff",
+              colorPrimary: "#dba897",
+              colorLink: "#dba897",
+              colorLinkHover: "#eac5b4",
+              colorLinkActive: "#c98b7a",
+            },
+            components: {
+              Button: {
+                colorPrimary: "#dba897",
+                colorPrimaryHover: "#eac5b4",
+                colorPrimaryActive: "#c98b7a",
+              },
+              Switch: {
+                colorPrimary: "#dba897",
+                colorPrimaryHover: "#eac5b4",
+              },
+              Checkbox: {
+                colorPrimary: "#dba897",
+                colorPrimaryHover: "#eac5b4",
+              },
+              Radio: {
+                colorPrimary: "#dba897",
+                colorPrimaryHover: "#eac5b4",
+              },
+              Slider: {
+                colorPrimary: "#dba897",
+                colorPrimaryBorderHover: "#eac5b4",
+              },
             },
           }}
         >

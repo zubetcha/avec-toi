@@ -124,7 +124,7 @@ export default function GuestbookCard() {
                 icon={<SendOutlined />}
                 block
                 size="small"
-                className="border-rose-100 bg-rose-100 text-rose-700"
+                className="border-primary-100 bg-primary-100 text-primary-700"
               >
                 메시지 남기기
               </Button>

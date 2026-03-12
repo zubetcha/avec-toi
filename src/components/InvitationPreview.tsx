@@ -3,6 +3,7 @@
 import React from "react";
 import { useInvitationStore } from "../stores/invitation-store";
 import Image from "next/image";
+import WeddingCalendar from "./WeddingCalendar";
 
 export default function InvitationPreview() {
   const { data } = useInvitationStore();
@@ -101,6 +102,11 @@ export default function InvitationPreview() {
             {displayVenue && <p className="text-sm text-gray-700">{displayVenue}</p>}
             {data.weddingAddress && <p className="text-xs text-gray-500">{data.weddingAddress}</p>}
           </div>
+
+          {/* 달력 */}
+          {data.weddingDate && (
+            <WeddingCalendar weddingDate={data.weddingDate} weddingTime={data.weddingTime} />
+          )}
 
           {/* 신랑신부 정보 */}
           {(groomFullName || brideFullName) && (

@@ -26,12 +26,12 @@
 }
 
 .swiper-pagination-bullet-active {
-  background-color: #f43f5e !important; /* rose-500 색상 */
+  background-color: #eac5b4 !important; /* primary */
 }
 
 .swiper-button-next,
 .swiper-button-prev {
-  color: #f43f5e !important; /* rose-500 색상 */
+  color: #eac5b4 !important; /* primary */
   background-color: rgba(255, 255, 255, 0.7);
   width: 35px !important;
   height: 35px !important;
@@ -47,7 +47,10 @@
 :root {
   --foreground-rgb: 23, 23, 23;
   --background-rgb: 248, 250, 252;
-  --swiper-theme-color: #f43f5e; /* rose-500 */
+  --color-primary: #eac5b4;
+  --color-secondary: #d6bda9;
+  --color-tertiary: #ffeddc;
+  --swiper-theme-color: #eac5b4; /* primary */
   --swiper-navigation-size: 30px;
 }
 

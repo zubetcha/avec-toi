@@ -102,7 +102,7 @@ export default function BasicInfoCard() {
                     id="groomFatherDeceased"
                     checked={data.groomInfo.isFatherDeceased}
                     onChange={(e) => setNested("groomInfo", "isFatherDeceased", e.target.checked)}
-                    className="text-rose-500"
+                    className="text-primary"
                   />
                   <label htmlFor="groomFatherDeceased" className="ml-2 text-sm text-gray-600">
                     故
@@ -132,7 +132,7 @@ export default function BasicInfoCard() {
                     id="groomMotherDeceased"
                     checked={data.groomInfo.isMotherDeceased}
                     onChange={(e) => setNested("groomInfo", "isMotherDeceased", e.target.checked)}
-                    className="text-rose-500"
+                    className="text-primary"
                   />
                   <label htmlFor="groomMotherDeceased" className="ml-2 text-sm text-gray-600">
                     故
@@ -222,7 +222,7 @@ export default function BasicInfoCard() {
                     id="brideFatherDeceased"
                     checked={data.brideInfo.isFatherDeceased}
                     onChange={(e) => setNested("brideInfo", "isFatherDeceased", e.target.checked)}
-                    className="text-rose-500"
+                    className="text-primary"
                   />
                   <label htmlFor="brideFatherDeceased" className="ml-2 text-sm text-gray-600">
                     故
@@ -252,7 +252,7 @@ export default function BasicInfoCard() {
                     id="brideMotherDeceased"
                     checked={data.brideInfo.isMotherDeceased}
                     onChange={(e) => setNested("brideInfo", "isMotherDeceased", e.target.checked)}
-                    className="text-rose-500"
+                    className="text-primary"
                   />
                   <label htmlFor="brideMotherDeceased" className="ml-2 text-sm text-gray-600">
                     故
@@ -272,7 +272,7 @@ export default function BasicInfoCard() {
                 id="showDeceasedWithFlower"
                 checked={data.options.showDeceasedWithFlower}
                 onChange={(e) => setNested("options", "showDeceasedWithFlower", e.target.checked)}
-                className="text-rose-500"
+                className="text-primary"
               />
               <label htmlFor="showDeceasedWithFlower" className="ml-2 text-sm text-gray-700">
                 고인 국화 꽃으로 표시
@@ -284,7 +284,7 @@ export default function BasicInfoCard() {
                 id="showBrideFirst"
                 checked={data.options.showBrideFirst}
                 onChange={(e) => setNested("options", "showBrideFirst", e.target.checked)}
-                className="text-rose-500"
+                className="text-primary"
               />
               <label htmlFor="showBrideFirst" className="ml-2 text-sm text-gray-700">
                 신부측 먼저 표시

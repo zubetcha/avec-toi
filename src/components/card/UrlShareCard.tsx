@@ -73,7 +73,7 @@ export default function UrlShareCard() {
                 icon={<EditOutlined />}
                 type="text"
                 size="small"
-                className="text-rose-600 hover:bg-rose-50"
+                className="text-primary-600 hover:bg-tertiary"
               >
                 수정
               </Button>
@@ -121,7 +121,7 @@ export default function UrlShareCard() {
               icon={<DownloadOutlined />}
               type="text"
               size="small"
-              className="text-rose-600 hover:bg-rose-50"
+              className="text-primary-600 hover:bg-tertiary"
             >
               다운로드
             </Button>

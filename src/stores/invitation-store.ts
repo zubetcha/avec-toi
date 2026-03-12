@@ -206,8 +206,8 @@ const defaultFormData: FormData = {
     showBrideFirst: false,
   },
   selectedThemeId: 1,
-  weddingDate: "",
-  weddingTime: "",
+  weddingDate: new Date().toISOString().split("T")[0],
+  weddingTime: "12:00",
   weddingLocation: "",
   weddingAddress: "",
   // 예식장 상세 정보

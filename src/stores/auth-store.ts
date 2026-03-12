@@ -3,7 +3,7 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import type { User } from "@supabase/auth-helpers-nextjs";
+import type { User } from "@supabase/supabase-js";
 
 interface AuthState {
   user: User | null;

@@ -12,7 +12,7 @@ export default function MainCard() {
   const { data, setField } = useInvitationStore();
 
   const themes = [
-    { id: 1, name: "포스터", color: "bg-rose-100" },
+    { id: 1, name: "포스터", color: "bg-primary-100" },
     { id: 2, name: "폴라로이드", color: "bg-blue-100" },
     { id: 3, name: "아치형", color: "bg-gray-100" },
     { id: 4, name: "심플", color: "bg-pink-100" },

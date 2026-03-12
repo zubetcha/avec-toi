@@ -149,7 +149,7 @@ export default function BackgroundMusicCard() {
                     onClick={() => handleSongSelect(song)}
                     type="text"
                     className={`h-auto w-full p-2 text-left ${
-                      data.selectedSong?.id === song.id ? "bg-rose-50" : ""
+                      data.selectedSong?.id === song.id ? "bg-tertiary" : ""
                     }`}
                     block
                   >

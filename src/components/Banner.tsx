@@ -65,7 +65,7 @@ export default function Banner() {
               }}
             >
               <div className="mx-4 max-w-lg rounded-lg bg-slate-50 p-8 text-center md:p-12">
-                <h2 className="mb-2 text-2xl font-bold text-rose-600 md:text-3xl">{image.title}</h2>
+                <h2 className="mb-2 text-2xl font-bold text-primary-600 md:text-3xl">{image.title}</h2>
                 <p className="text-gray-700">{image.description}</p>
               </div>
             </div>

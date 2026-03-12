@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, ReactNode, useRef } from "react";
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { useSupabase } from "@/app/_provider/supabase-provider";
 import { useAuthStore } from "@/stores/auth-store";
 
 interface AuthProviderProps {
@@ -9,21 +9,25 @@ interface AuthProviderProps {
 }
 
 export default function AuthProvider({ children }: AuthProviderProps) {
-  const supabase = useSupabaseClient();
-  const user = useUser();
+  const { supabase } = useSupabase();
   const { setUser } = useAuthStore();
   const initializedRef = useRef(false);
 
   useEffect(() => {
-    // 초기 사용자 상태 설정
-    if (!initializedRef.current) {
-      setUser(user);
+    const initializeAuth = async () => {
+      if (initializedRef.current) return;
       initializedRef.current = true;
-    }
-  }, [user, setUser]);
+
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setUser(session?.user ?? null);
+    };
+
+    initializeAuth();
+  }, [supabase, setUser]);
 
   useEffect(() => {
-    // auth state 변경 감지
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {

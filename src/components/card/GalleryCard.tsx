@@ -79,7 +79,7 @@ export default function GalleryCard() {
             </Button>
           </Upload>
           {data.galleryImages.length >= 10 && (
-            <p className="mt-1 text-xs text-rose-500">최대 10장까지만 업로드할 수 있습니다.</p>
+            <p className="mt-1 text-xs text-primary-500">최대 10장까지만 업로드할 수 있습니다.</p>
           )}
         </div>
 
