@@ -49,7 +49,7 @@ export default function WeddingCalendar({ weddingDate, weddingTime }: WeddingCal
     : "";
 
   return (
-    <div className="rounded-lg bg-white/50 p-4">
+    <div className="w-full rounded-lg bg-white/50 p-4">
       <div className="mb-3 text-center">
         <p className="text-lg font-medium text-gray-800">
           {year}년 {monthNames[month]}

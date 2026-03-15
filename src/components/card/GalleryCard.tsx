@@ -99,6 +99,8 @@ export default function GalleryCard() {
                   <Image
                     src={image.url}
                     alt={image.caption || `갤러리 이미지 ${index + 1}`}
+                    width={100}
+                    height={100}
                     className="h-32 w-full object-cover"
                   />
 
@@ -118,7 +120,7 @@ export default function GalleryCard() {
                     type="primary"
                     danger
                     size="small"
-                    className="absolute top-1 right-1 opacity-0 transition-opacity group-hover:opacity-100"
+                    className="absolute right-1 top-1 opacity-0 transition-opacity group-hover:opacity-100"
                   />
                 </div>
               ))}
